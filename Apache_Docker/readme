@@ -1,0 +1,5 @@
+# Build the image
+sudo docker build -t ajn_apache .
+
+# Run a ajn_apache container
+sudo docker run -t -i --name apache1 ajn_apache
