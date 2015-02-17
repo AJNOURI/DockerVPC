@@ -19,12 +19,9 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 RUN apt-get update
-RUN sudo apt-get Install -y wget
 
 # Tools
-RUN sudo apt-get install -y iperf
-RUN sudo apt-get install -y inetutils-traceroute
-RUN sudo apt-get install mtr
+RUN sudo apt-get install -y wget iperf inetutils-traceroute mtr
 
 # Apache
 RUN sudo apt-get install -y apache2
