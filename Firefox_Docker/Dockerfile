@@ -1,3 +1,4 @@
+# Fabio Rehm: http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/
 FROM ubuntu:14.04
 
 RUN apt-get update && apt-get install -y firefox
