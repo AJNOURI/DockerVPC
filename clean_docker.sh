@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# AJN: ajn.bin@gmail.com
 
 echo ''
 echo ''
