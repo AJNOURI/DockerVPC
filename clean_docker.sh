@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# AJN: ajn.bin@gmail.com
 
 echo ''
 echo ''
@@ -42,6 +43,6 @@ while true; do
     case $resp in
         [Yy]* ) del_images; break;;
         [Nn]* ) exit;;
-        * ) echo "Please answer yes or no.";;
+        * ) echo "Please answer yes [Yy]* or no [Nn]*";;
     esac
 done

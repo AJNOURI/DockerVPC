@@ -22,7 +22,7 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 RUN apt-get update
-RUN sudo apt-get Install -y wget
+RUN sudo apt-get install -y wget
 
 # Tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath mtr dnsutils
