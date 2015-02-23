@@ -1,11 +1,8 @@
 #!/bin/bash
-
-cd Base_Docker_Image/
-sudo docker build -t mybimage .
-cd ../Apache_Docker/
-sudo docker build -t myapache .
-cd ../Firefox_Docker
-sudo docker build -t myfirefox .
+IMGLIST="$(sudo docker images | grep mybimage | awk '{ print $1; }')"
+[[ $IMGLIST =~ "mybimage" ]] && sudo docker build -t mybimage -f phusion-dockerbase .
+[[ $IMGLIST =~ "myapache" ]] && sudo docker build -t myapache -f apache-docker .
+[[ $IMGLIST =~ "myfirefox" ]] && sudo docker build -t myfirefox -f firefox-docker .
 
 BASE_I1="$(sudo docker images | grep mybimage | awk '{ print $3; }')"
 lxterminal -e "sudo docker run -t -i --name baseimage1 $BASE_I1 /bin/bash"
