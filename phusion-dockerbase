@@ -23,11 +23,23 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-security main" >> /etc
 RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
-RUN apt-get update
-RUN sudo apt-get install -y wget
+RUN apt-get update && apt-get install -y wget
 
-# Tools
-RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath mtr dnsutils sip-tester
+# Miscellaneous tools
+RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath mtr dnsutils sip-tester build-essential sip-tester
+
+WORKDIR /tmp
+
+# .pcap files for voip testing
+RUN wget hpnouri.free.fr/sip/dtmf_2833_1.pcap
+RUN wget hpnouri.free.fr/sip/g711a.pcap
+
+# install pjsua voip testing tool
+# executable to use: /tmp/pjproject-2.3/pjsip-apps/bin/pjsua-x86_64-unknown-linux-gnu
+RUN wget http://www.pjsip.org/release/2.3/pjproject-2.3.tar.bz2
+RUN tar -jxvf pjproject-2.3.tar.bz2
+WORKDIR pjproject-2.3
+RUN ./configure && make dep && make clean && make
 
 # Clean up APT
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
