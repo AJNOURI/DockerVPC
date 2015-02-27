@@ -8,9 +8,10 @@ FROM phusion/baseimage:0.9.16
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
-WPRKDIR /tmp
+WORKDIR /tmp
 
-# Update the source list for appropriate repository, trusty 12.04 LTS, in this case.
+
+# Update the source list for appropriate repository, trusty 14.04 LTS, in this case.
 # Generated from:
 # https://wiki.ubuntu.com/DevelopmentCodeNames
 # http://repogen.simplylinux.ch/

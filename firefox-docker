@@ -1,4 +1,8 @@
 # Fabio Rehm: http://fabiorehm.com/blog/2014/09/11/running-gui-apps-with-docker/
+
+# Run Firefox container
+# sudo docker run -ti --name firefox1 --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix myfirefox
+
 FROM ubuntu:14.04
 
 RUN apt-get update && apt-get install -y firefox
