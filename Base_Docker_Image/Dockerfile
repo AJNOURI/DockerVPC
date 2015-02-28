@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y wget
 
 # Miscellaneous tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
-mtr dnsutils sip-tester build-essential sip-tester ostinato tcpdump
+mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth
 
 WORKDIR /tmp
 
@@ -48,3 +48,5 @@ RUN ./configure && make dep && make clean && make
 
 # Clean up APT
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
