@@ -26,7 +26,8 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main unive
 RUN apt-get update && apt-get install -y wget
 
 # Miscellaneous tools
-RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath mtr dnsutils sip-tester build-essential sip-tester
+RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
+mtr dnsutils sip-tester build-essential sip-tester ostinato tcpdump
 
 WORKDIR /tmp
 

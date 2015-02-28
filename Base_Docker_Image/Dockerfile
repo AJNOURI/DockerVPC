@@ -26,13 +26,18 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main unive
 RUN apt-get update && apt-get install -y wget
 
 # Miscellaneous tools
-RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath mtr dnsutils sip-tester build-essential sip-tester
+RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
+mtr dnsutils sip-tester build-essential sip-tester ostinato tcpdump
 
 WORKDIR /tmp
 
-# .pcap files for voip testing
+# Some useful .pcap .xml files for voip testing
 RUN wget hpnouri.free.fr/sip/dtmf_2833_1.pcap
 RUN wget hpnouri.free.fr/sip/g711a.pcap
+RUN wget http://sipp.sourceforge.net/doc/uac.xml
+RUN wget http://sipp.sourceforge.net/doc/uac_pcap.xml
+RUN sed -i 's/pcap\/g711a.pcap/\/tmp\/g711a.pcap/g' uac_pcap.xml
+RUN sed -i 's/pcap\/dtmf_2833_1.pcap/\/tmp\/dtmf_2833_1.pcap/g' uac_pcap.xml
 
 # install pjsua voip testing tool
 # executable to use: /tmp/pjproject-2.3/pjsip-apps/bin/pjsua-x86_64-unknown-linux-gnu
