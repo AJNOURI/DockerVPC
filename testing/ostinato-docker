@@ -8,11 +8,10 @@
 # Run Linphone in a container:
 #
 # docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
-#     -v /dev/snd:/dev/snd \
 #     -e DISPLAY=unix$DISPLAY \
-#     phubaselinphone
+#     phubaseostinato
 #
-# phusion/baseimage/linphone : is the tag of the built image
+# phubaseostinato : is the tag of the built image
 
 FROM phusion/baseimage:0.9.16
 
