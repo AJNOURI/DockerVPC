@@ -5,13 +5,13 @@
 # for a list of version numbers.
 
 
-# Run Linphone in a container:
+# Run Ostinato in a container:
 #
 # docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
 #     -e DISPLAY=unix$DISPLAY \
-#     phubaseostinato
+#     ostinatoimg
 #
-# phubaseostinato : is the tag of the built image
+# ostinatoimg : is the tag of the built image
 
 FROM phusion/baseimage:0.9.16
 

@@ -10,9 +10,9 @@
 # docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
 #     -v /dev/snd:/dev/snd \
 #     -e DISPLAY=unix$DISPLAY \
-#     phubaselinphone
+#     linphoneimg
 #
-# phubaselinphone : is the tag of the built image
+# linphoneimg : is the tag of the built image
 
 FROM phusion/baseimage:0.9.16
 
