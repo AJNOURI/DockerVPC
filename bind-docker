@@ -1,3 +1,8 @@
+# Run BIND the image:
+# sudo docker run -ti --name bind1 /
+#         -v /home/ajn/labs/docker-dns/opt/bind:/data /
+#          sameersbn/bind /bin/bash
+#
 FROM sameersbn/ubuntu:14.04.20150220
 MAINTAINER sameer@damagehead.com
 
