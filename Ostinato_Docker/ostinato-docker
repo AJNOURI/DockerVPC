@@ -5,14 +5,13 @@
 # for a list of version numbers.
 
 
-# Run Linphone in a container:
-#
+# Run Ostinato in a container:
+# xhost local:root
 # docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
-#     -v /dev/snd:/dev/snd \
 #     -e DISPLAY=unix$DISPLAY \
-#     linphoneimg
+#     ostinatoimg
 #
-# linphoneimg : is the tag of the built image
+# ostinatoimg : is the tag of the built image
 
 FROM phusion/baseimage:0.9.16
 
@@ -33,9 +32,7 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 
-RUN apt-get update && apt-get install -y linphone
-
-EXPOSE 5060
-
+RUN apt-get update && apt-get install -y ostinato
+EXPOSE 7878
 # Start linphone
-ENTRYPOINT ["linphone"]
+ENTRYPOINT ["drone"]
