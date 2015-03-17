@@ -4,15 +4,6 @@
 # https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # for a list of version numbers.
 
-
-# Run Ostinato in a container:
-# xhost local:root
-# docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
-#     -e DISPLAY=unix$DISPLAY \
-#     ostinatoimg
-#
-# ostinatoimg : is the tag of the built image
-
 FROM phusion/baseimage:0.9.16
 
 # Use baseimage-docker's init system.
@@ -32,7 +23,15 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 
-RUN apt-get update && apt-get install -y ostinato
-EXPOSE 7878
-# Start server 
-ENTRYPOINT ["drone"]
+RUN apt-get update && apt-get install -y isc-dhcp-server 
+
+EXPOSE 67
+EXPOSE 67/udp
+EXPOSE 547
+EXPOSE 547/udp
+EXPOSE 647
+EXPOSE 647/udp
+EXPOSE 847
+EXPOSE 847/udp
+
+
