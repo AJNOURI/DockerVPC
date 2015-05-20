@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y wget
 
 # Miscellaneous tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
-mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth
+mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev
 
 WORKDIR /tmp
 
@@ -43,7 +43,7 @@ RUN sed -i 's/pcap\/dtmf_2833_1.pcap/\/tmp\/dtmf_2833_1.pcap/g' uac_pcap.xml
 # executable to use: /tmp/pjproject-2.3/pjsip-apps/bin/pjsua-x86_64-unknown-linux-gnu
 RUN wget http://www.pjsip.org/release/2.3/pjproject-2.3.tar.bz2
 RUN tar -jxvf pjproject-2.3.tar.bz2
-
+WORKDIR pjproject-2.3/
 RUN ./configure && make dep && make clean && make
 
 # Clean up APT
