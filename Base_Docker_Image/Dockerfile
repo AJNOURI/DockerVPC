@@ -36,6 +36,14 @@ RUN wget hpnouri.free.fr/sip/dtmf_2833_1.pcap
 RUN wget hpnouri.free.fr/sip/g711a.pcap
 RUN wget http://sipp.sourceforge.net/doc/uac.xml
 RUN wget http://sipp.sourceforge.net/doc/uac_pcap.xml
+
+# Copy these files from host local directoy to /tmp
+#ADD dtmf_2833_1.pcap /tmp/dtmf_2833_1.pcap
+#ADD g711a.pcap /tmp/g711a.pcap
+#ADD uac.xml /tmp/uac.xml
+#ADD uac_pcap.xml /tmp/uac_pcap.xml
+
+# Adjust to the new file location inside xml files (sipp)
 RUN sed -i 's/pcap\/g711a.pcap/\/tmp\/g711a.pcap/g' uac_pcap.xml
 RUN sed -i 's/pcap\/dtmf_2833_1.pcap/\/tmp\/dtmf_2833_1.pcap/g' uac_pcap.xml
 
@@ -48,5 +56,3 @@ RUN ./configure && make dep && make clean && make
 
 # Clean up APT
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
