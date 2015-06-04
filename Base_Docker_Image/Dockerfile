@@ -23,25 +23,30 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-security main" >> /etc
 RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
-RUN apt-get update && apt-get install -y wget
+RUN apt-get update && apt-get install -y wget git
 
 # Miscellaneous tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
-mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev
+mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev libpcap-dev libssl-dev
 
+# Install IPv6-THC tool
+RUN git clone https://github.com/vanhauser-thc/thc-ipv6
+WORKDIR thc-ipv6/
+RUN make && make install
+
+# Install VoIP tools
 WORKDIR /tmp
-
 # Some useful .pcap .xml files for voip testing
-RUN wget hpnouri.free.fr/sip/dtmf_2833_1.pcap
-RUN wget hpnouri.free.fr/sip/g711a.pcap
-RUN wget http://sipp.sourceforge.net/doc/uac.xml
-RUN wget http://sipp.sourceforge.net/doc/uac_pcap.xml
+#RUN wget hpnouri.free.fr/sip/dtmf_2833_1.pcap
+#RUN wget hpnouri.free.fr/sip/g711a.pcap
+#RUN wget http://sipp.sourceforge.net/doc/uac.xml
+#RUN wget http://sipp.sourceforge.net/doc/uac_pcap.xml
 
 # Copy these files from host local directoy to /tmp
-#ADD dtmf_2833_1.pcap /tmp/dtmf_2833_1.pcap
-#ADD g711a.pcap /tmp/g711a.pcap
-#ADD uac.xml /tmp/uac.xml
-#ADD uac_pcap.xml /tmp/uac_pcap.xml
+ADD dtmf_2833_1.pcap /tmp/dtmf_2833_1.pcap
+ADD g711a.pcap /tmp/g711a.pcap
+ADD uac.xml /tmp/uac.xml
+ADD uac_pcap.xml /tmp/uac_pcap.xml
 
 # Adjust to the new file location inside xml files (sipp)
 RUN sed -i 's/pcap\/g711a.pcap/\/tmp\/g711a.pcap/g' uac_pcap.xml
@@ -55,4 +60,4 @@ WORKDIR pjproject-2.3/
 RUN ./configure && make dep && make clean && make
 
 # Clean up APT
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+#RUN apt-get clean && rm -rf /var/lib/apt/lists/*

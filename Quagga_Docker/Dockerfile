@@ -27,11 +27,16 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main univ
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 RUN apt-get update && apt-get install -y wget
 
-# try ssh by default with basedocker
+# Enable SSH loging provided by Baseimage docker and regenerate keys
+RUN rm -f /etc/service/sshd/down
+RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
+RUN mkdir -p /root/.ssh
+ADD id_rsa.pub /tmp/id_rsa.pub
+RUN cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys && rm -f /tmp/id_rsa.pub
+
 
 # install tools
-#RUN apt-get install -y openssh-server
-#RUN mkdir -p /var/run/sshd
+
 
 # install quagga
 RUN apt-get install -y quagga telnet
@@ -39,14 +44,17 @@ RUN apt-get install -y quagga telnet
 # enable daemons
 RUN sed -i 's/=no/=yes/g' /etc/quagga/daemons
 
-# ip forwarding is enabled by default
-
 # copy the default configs for the routing daemons
 # TODO: replace this with using ADD for local files
 RUN cp /usr/share/doc/quagga/examples/*.sample /etc/quagga/
+
 RUN echo "for curFile in /etc/quagga/*.sample; do mv \"\$curFile\" \"\${curFile:0:-7}\"; done" | bash
-RUN echo VTYSH_PAGER=more > /etc/environment
-#ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
+RUN echo VTYSH_PAGER=more >> /etc/environment
+RUN echo export VTYSH_PAGER=more >> /etc/bash.bashrc
+
+# forward babeld debug logging to a file
+RUN sed -i 's/log stdout/\!log stdout/g' /etc/quagga/babeld.conf
+RUN sed -i 's/\!log file/log file/g' /etc/quagga/babeld.conf
 
 RUN mkdir /etc/service/quagga
 ADD quagga.sh /etc/service/quagga/run
@@ -54,4 +62,4 @@ CMD ["/etc/init.d/quagga","start"]
 #entrypoint ["/etc/init.d/quagga"]
 
 # expose ssh, bgp and quagga management ports
-EXPOSE 22 179 2601 2602 2603 2604 2605 2606
+EXPOSE 179 2601 2602 2603 2604 2605 2606
