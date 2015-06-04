@@ -45,6 +45,7 @@ RUN sed -i 's/=no/=yes/g' /etc/quagga/daemons
 # TODO: replace this with using ADD for local files
 RUN cp /usr/share/doc/quagga/examples/*.sample /etc/quagga/
 RUN echo "for curFile in /etc/quagga/*.sample; do mv \"\$curFile\" \"\${curFile:0:-7}\"; done" | bash
+RUN echo VTYSH_PAGER=more > /etc/environment
 #ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
 
 RUN mkdir /etc/service/quagga

@@ -5,7 +5,7 @@
 
 # How to use:
 # http://127.0.0.1:8080
-sudo docker run \
+docker run \
   --volume=/:/rootfs:ro \
   --volume=/var/run:/var/run:rw \
   --volume=/sys:/sys:ro \
