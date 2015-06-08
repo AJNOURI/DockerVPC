@@ -22,9 +22,12 @@ function networking(){
        read -p 'Container: interface IP => ' IP
        read -p 'Container: interface IP mask => ' MASK
        read -p 'Container: interface next-hop IP (GNS3) => ' NH
-       sudo echo "sudo pipework $BR -i $INT $1 $IP/$MASK@$NH"
-       sudo pipework $BR -i $INT $1 $IP/$MASK@$NH
-       read -p 'Would you like to configure another interface? [Yy] [Nn]' CONT
+       if sudo pipework $BR -i $INT $1 $IP/$MASK@$NH ; then
+        sudo echo "command: >> sudo pipework $BR -i $INT $1 $IP/$MASK@$NH << successfully executed."
+    else
+        echo "Error executing pipework command!" 1>&2
+    fi
+       read -p 'Would you like to continue with network configuration? [Yy] [Nn]' CONT
        case $CONT in
             [Yy]* ) ;;
             [Nn]* ) exit;;
