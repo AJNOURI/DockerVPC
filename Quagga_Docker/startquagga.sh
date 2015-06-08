@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# AJ NOURI: cciethebeginning.wordpress.com
+# Email: ajn.bin@gmail.com
+
 # $1 = Container name
 
 function networking(){
-   # $1 : The 1st argument passed to the function, container ID
-   # Configure additional interfaces on the container,
+   # $1 : The 1st argument passed to the function, container ID.
+   # Configure additional interfaces on the container:
    # - host bridge to  which the interfaces is connected
    # - container interface IP
    # - gateway: the last configured gateway is used
@@ -25,7 +28,7 @@ function networking(){
        if sudo pipework $BR -i $INT $1 $IP/$MASK@$NH ; then
         sudo echo "command: >> sudo pipework $BR -i $INT $1 $IP/$MASK@$NH << successfully executed."
     else
-        echo "Error executing pipework command!" 1>&2
+        echo "pipework error!" 1>&2
     fi
        read -p 'Would you like to continue with network configuration? [Yy] [Nn]' CONT
        case $CONT in
@@ -52,10 +55,11 @@ if [[ $RCID ]]
 then
     while true; do
         echo "$CNAME is a running container: $RCID"
-        read -p 'There is a running container with the same name. Would you like to stop it? [Yy] [Nn]' RESP
+        read -p 'A running container with the same name. Would you like to [E]xit it, [D]elete it or [S]kip? [Ee]/[Dd]/[Ss]' RESP
         case "$RESP" in
-        [Yy]* ) sudo docker stop $RCID;exit;;
-        [Nn]* ) networking $CID; exit;;
+        [Ee]* ) sudo docker stop $RCID;exit;;
+        [Ss]* ) networking $CID; exit;;
+        [Dd]* ) sudo docker stop $RCID; sudo docker rm $RCID; exit;;
         * ) echo "Please answer yes [Yy]* or no [Nn]*";;
         esac
     done
@@ -65,10 +69,11 @@ if [[ $CID  ]]
 then
     echo "Container ID: $CID"
     while true; do
-        read -p 'There is a stopped container with the same name. Would you like to start it? [Yy] [Nn]' RESP
+        read -p 'A stopped container with the same name. Would you like to [R]un it or [D]elete it or [S]kip? [Rr]/[Dd]/[Ss]' RESP
         case $RESP in
-        [Yy]* ) sudo docker start $CID;lxterminal -e "sudo docker attach $CNAME"; sleep 2;networking $CID; break;;
-        [Nn]* ) exit;;
+        [Rr]* ) sudo docker start $CID;lxterminal -e "sudo docker attach $CNAME"; sleep 2;networking $CID; break;;
+        [Dd]* ) sudo docker stop $CID; sudo docker rm $CID; exit;;
+        [Ss]* ) exit;;
         * ) echo "Please answer yes [Yy]* or no [Nn]*";;
         esac
     done
