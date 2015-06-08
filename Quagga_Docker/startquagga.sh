@@ -8,10 +8,29 @@ function networking(){
    # - host bridge to  which the interfaces is connected
    # - container interface IP
    # - gateway: the last configured gateway is used
-   echo "Configuring networking... \n"
-   sudo pipework br2 -i eth1 $1 192.168.12.1/24@192.168.12.100
-   sudo pipework br3 -i eth2 $1 192.168.13.1/24@192.168.13.100
-   sudo pipework br4 -i eth3 $1 192.168.14.1/24@192.168.14.100
+   echo "Quagga networking... \n"
+   while true; do
+       read -p 'Continue? [Yy] [Nn]' NET
+       case $NET in
+       [Yy]* ) break;;
+       [Nn]* ) exit;;
+       esac
+   done
+   while true; do
+       read -p 'Host bridge interface => ' BR
+       read -p 'Container: interface (a new one) connected to host bridge => ' INT
+       read -p 'Container: interface IP => ' IP
+       read -p 'Container: interface IP mask => ' MASK
+       read -p 'Container: interface next-hop IP (GNS3) => ' NH
+       sudo echo "sudo pipework $BR -i $INT $1 $IP/$MASK@$NH"
+       sudo pipework $BR -i $INT $1 $IP/$MASK@$NH
+       read -p 'Would you like to configure another interface? [Yy] [Nn]' CONT
+       case $CONT in
+            [Yy]* ) ;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+            esac
+    done
    }
 
 if [ "$#" -ne 2 ]
@@ -25,16 +44,15 @@ CNAME=$2
 IID="$(sudo docker images | grep quagga | awk '{ print $3; }')"
 RCID="$(sudo docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
 CID="$(sudo docker ps -a | grep $CNAME | grep Exited | awk '{ print $1; }')"
-RUNNING=false
 
 if [[ $RCID ]]
 then
     while true; do
         echo "$CNAME is a running container: $RCID"
-        read -p 'There is a running container with the same name. Would you like to stop it? [Yy] [Nn]' resp
-        case "$resp" in
+        read -p 'There is a running container with the same name. Would you like to stop it? [Yy] [Nn]' RESP
+        case "$RESP" in
         [Yy]* ) sudo docker stop $RCID;exit;;
-        [Nn]* ) exit;;
+        [Nn]* ) networking $CID; exit;;
         * ) echo "Please answer yes [Yy]* or no [Nn]*";;
         esac
     done
@@ -44,10 +62,10 @@ if [[ $CID  ]]
 then
     echo "Container ID: $CID"
     while true; do
-        read -p 'There is a stopped container with the same name. Would you like to start it? [Yy] [Nn]' resp
-        case $resp in
+        read -p 'There is a stopped container with the same name. Would you like to start it? [Yy] [Nn]' RESP
+        case $RESP in
         [Yy]* ) sudo docker start $CID;lxterminal -e "sudo docker attach $CNAME"; sleep 2;networking $CID; break;;
-        [Nn]* ) RUNNING=true; exit;;
+        [Nn]* ) exit;;
         * ) echo "Please answer yes [Yy]* or no [Nn]*";;
         esac
     done
