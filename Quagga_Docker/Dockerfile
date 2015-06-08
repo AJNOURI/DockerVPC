@@ -61,5 +61,9 @@ ADD quagga.sh /etc/service/quagga/run
 CMD ["/etc/init.d/quagga","start"]
 #entrypoint ["/etc/init.d/quagga"]
 
+
+# Map a container directory to Docker host directory (not in the other direction)
+VOLUME /etc/quagga/
+
 # expose ssh, bgp and quagga management ports
 EXPOSE 179 2601 2602 2603 2604 2605 2606
