@@ -24,9 +24,13 @@ RUN apt-get update
 RUN sudo apt-get install -y wget iperf inetutils-traceroute mtr
 
 # Apache
+
 RUN sudo apt-get install -y apache2
+RUN apt-get install php5 libapache2-mod-php5 w3m -y
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-/usr/sbin/apachectl restart
+RUN /usr/sbin/apachectl restart
+
+CMD /bin/bash
 
 # Clean up APT
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
