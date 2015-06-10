@@ -49,15 +49,15 @@ RUN git clone https://github.com/vanhauser-thc/thc-ipv6
 WORKDIR thc-ipv6/
 RUN make && make install
 
+# Install Ostinato traffic generator
+# from the container use "drone" to start the server
+# from docker host use "ostinato" to start GUI client
+RUN apt-get install -y ostinato
+
 # Install VoIP tools
 WORKDIR /tmp
-# Some useful .pcap .xml files for voip testing
-#RUN wget hpnouri.free.fr/sip/dtmf_2833_1.pcap
-#RUN wget hpnouri.free.fr/sip/g711a.pcap
-#RUN wget http://sipp.sourceforge.net/doc/uac.xml
-#RUN wget http://sipp.sourceforge.net/doc/uac_pcap.xml
 
-# Copy these files from host local directoy to /tmp
+# Copy some useful files from host local directoy to /tmp
 ADD dtmf_2833_1.pcap /tmp/dtmf_2833_1.pcap
 ADD g711a.pcap /tmp/g711a.pcap
 ADD uac.xml /tmp/uac.xml
@@ -73,6 +73,11 @@ RUN wget http://www.pjsip.org/release/2.3/pjproject-2.3.tar.bz2
 RUN tar -jxvf pjproject-2.3.tar.bz2
 WORKDIR pjproject-2.3/
 RUN ./configure && make dep && make clean && make
+
+RUN apt-get install -y ostinato
+CMD /bin/bash
+
+EXPOSE 22 80 7878
 
 # Clean up APT
 #RUN apt-get clean && rm -rf /var/lib/apt/lists/*
