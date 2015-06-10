@@ -25,6 +25,13 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main univ
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 RUN apt-get update && apt-get install -y wget git
 
+# Apache server
+RUN sudo apt-get install -y apache2
+RUN apt-get install php5 libapache2-mod-php5 w3m -y
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN /usr/sbin/apachectl restart
+
+
 # Enable SSH loging provided by Baseimage docker and regenerate keys
 RUN rm -f /etc/service/sshd/down
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
