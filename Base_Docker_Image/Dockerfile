@@ -23,7 +23,7 @@ RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-security main" >> /etc
 RUN echo "deb http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main universe" >> /etc/apt/sources.list
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
-RUN apt-get update && apt-get install -y wget git
+RUN apt-get update && apt-get install -y wget git zip
 
 # Apache server
 RUN sudo apt-get install -y apache2
@@ -71,10 +71,25 @@ RUN sed -i 's/pcap\/dtmf_2833_1.pcap/\/tmp\/dtmf_2833_1.pcap/g' uac_pcap.xml
 # executable to use: /tmp/pjproject-2.3/pjsip-apps/bin/pjsua-x86_64-unknown-linux-gnu
 RUN wget http://www.pjsip.org/release/2.3/pjproject-2.3.tar.bz2
 RUN tar -jxvf pjproject-2.3.tar.bz2
+RUN rm pjproject-2.3.tar.bz2
 WORKDIR pjproject-2.3/
 RUN ./configure && make dep && make clean && make
 
+# Install Ostinato
 RUN apt-get install -y ostinato
+
+# Install D-ITG
+RUN mkdir /d-itg
+WORKDIR /d-itg
+RUN wget http://traffic.comics.unina.it/software/ITG/codice/D-ITG-2.8.1-r1023-src.zip
+RUN unzip D-ITG-2.8.1-r1023-src.zip
+RUN rm D-ITG-2.8.1-r1023-src.zip
+WORKDIR /d-itg/D-ITG-2.8.1-r1023/src
+RUN make && make install PREFIX=/usr/local
+
+
+WORKDIR /
+
 CMD /bin/bash
 
 EXPOSE 22 80 7878
