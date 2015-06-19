@@ -79,12 +79,11 @@ RUN ./configure && make dep && make clean && make
 RUN apt-get install -y ostinato
 
 # Install D-ITG
-RUN mkdir /d-itg
-WORKDIR /d-itg
+WORKDIR /
 RUN wget http://traffic.comics.unina.it/software/ITG/codice/D-ITG-2.8.1-r1023-src.zip
 RUN unzip D-ITG-2.8.1-r1023-src.zip
 RUN rm D-ITG-2.8.1-r1023-src.zip
-WORKDIR /d-itg/D-ITG-2.8.1-r1023/src
+WORKDIR /D-ITG-2.8.1-r1023/src
 RUN make && make install PREFIX=/usr/local
 
 
@@ -92,7 +91,7 @@ WORKDIR /
 
 CMD /bin/bash
 
-EXPOSE 22 80 7878
+#EXPOSE 22 80 7878
 
 # Clean up APT
 #RUN apt-get clean && rm -rf /var/lib/apt/lists/*
