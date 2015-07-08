@@ -43,5 +43,6 @@ RUN apt-get update && apt-get install -y linphone && rm -rf /var/lib/apt/lists/*
 
 #EXPOSE 5060
 
+CMD ["/bin/bash"]
 # Start linphone
-ENTRYPOINT ["linphone"]
+#ENTRYPOINT ["linphone"]

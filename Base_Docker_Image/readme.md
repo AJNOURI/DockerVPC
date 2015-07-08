@@ -28,3 +28,15 @@ From the container, start SSHd:
 
 From Docker host:
 ssh root@<container_IP>
+
+VLC (VideoLAN):
+Simply type vlc & for backgroud so you still have access to terminal.
+Small video files in different formats are provided for streaming testing.
+
+Links Browser:
+
+Text mode:
+links <url>
+
+Graphic mode
+links2 -g <url>

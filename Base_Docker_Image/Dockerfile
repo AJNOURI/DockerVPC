@@ -58,10 +58,10 @@ RUN apt-get install -y ostinato
 WORKDIR /tmp
 
 # Copy some useful files from host local directoy to /tmp
-ADD dtmf_2833_1.pcap /tmp/dtmf_2833_1.pcap
-ADD g711a.pcap /tmp/g711a.pcap
-ADD uac.xml /tmp/uac.xml
-ADD uac_pcap.xml /tmp/uac_pcap.xml
+ADD ./voip/dtmf_2833_1.pcap /tmp/dtmf_2833_1.pcap
+ADD ./voip/g711a.pcap /tmp/g711a.pcap
+ADD ./voip/uac.xml /tmp/uac.xml
+ADD ./voip/uac_pcap.xml /tmp/uac_pcap.xml
 
 # Adjust to the new file location inside xml files (sipp)
 RUN sed -i 's/pcap\/g711a.pcap/\/tmp\/g711a.pcap/g' uac_pcap.xml
@@ -86,6 +86,14 @@ RUN rm D-ITG-2.8.1-r1023-src.zip
 WORKDIR /D-ITG-2.8.1-r1023/src
 RUN make && make install PREFIX=/usr/local
 
+RUN apt-get install linphone vlc links2 -y
+
+WORKDIR /tmp
+ADD ./media/small.3gp /tmp/small.3gp
+ADD ./media/small.flv /tmp/small.flv
+ADD ./media/small.mp4 /tmp/small.mp4
+ADD ./media/small.ogv /tmp/small.ogv
+ADD ./media/small.webm /tmp/small.webm
 
 WORKDIR /
 
