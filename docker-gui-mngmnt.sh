@@ -5,7 +5,7 @@
 
 # How to use:
 # http://127.0.0.1:8080
-sudo docker run \
+docker run \
   --volume=/:/rootfs:ro \
   --volume=/var/run:/var/run:rw \
   --volume=/sys:/sys:ro \
@@ -20,4 +20,4 @@ sudo docker run \
 
 # How to use:
 # http://127.0.0.1:10086
-sudo docker run -d -p 10086:10086 -v /var/run/docker.sock:/var/run/docker.sock tobegit3hub/seagull
+docker run -d -p 10086:10086 -v /var/run/docker.sock:/var/run/docker.sock tobegit3hub/seagull
