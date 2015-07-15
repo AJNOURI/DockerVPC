@@ -1,7 +1,8 @@
 VirtualPC container for GNS3
 =======================
 
-The goal is to take profit of docker containers to useinside GNS3 as aslmost a fill-fledged linux end host instead of using the very limited VPCS or an overkill virtual machine.
+The goal is to take profit of docker containers to use inside GNS3 as (almost) full-fledged linux endhost instead of
+using the very limited VPCS or an overkill virtual machine.
 
 This includes a script to manage containers and set networking parameters using pipework.
 
@@ -26,7 +27,8 @@ From a another container connect to the server using ***curl*** or ***links2***
 -------------
 #### <i class="icon-folder-open"></i> Traffic generation tools
 ##### **Ostinato**
-From container you want to control, start the server component of Ostinato “drone” in the background, so you can continue to use the terminal: drone &
+From container you want to control, start the server component of Ostinato “drone” in the background, so you can 
+continue to use the terminal: drone &
 From Docker host (Desktop OS), you start Ostinato client GUI: Type: ostinato and connect to containers IP running drone
 ##### **D-ITG**
 ##### **iperf**
