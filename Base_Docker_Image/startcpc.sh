@@ -37,28 +37,48 @@ function networking(){
        esac
    done
    while true; do
-       read -p 'Host bridge interface => ' BR
-       read -p 'Container: interface (a new one) connected to host bridge => ' INT
-       read -p 'Container: interface IP => ' IP
-       read -p 'Container: interface IP mask => ' MASK
-       read -p 'Container: interface next-hop IP (GNS3) => ' NH
-       if sudo pipework $BR -i $INT $1 $IP/$MASK@$NH ; then
-        sudo echo "command: >> sudo pipework $BR -i $INT $1 $IP/$MASK@$NH << successfully executed."
-    else
-        echo "pipework error!" 1>&2
-    fi
-       read -p 'Would you like to continue with network configuration? [Yy] [Nn]  ' CONT
-       case $CONT in
-            [Yy]* ) ;;
-            [Nn]* ) exit;;
-            * ) echo "Please answer yes [Yy]* or no [Nn]*";;
-            esac
-    done
-   }
+       read -p 'Enter Host bridge to connect the container to => ' BR
+       read -p 'Enter a new interface inside the container to connect to host bridge => ' INT
+       read -p 'Enter IP address (without mask) for the container interface => ' IP
+       read -p 'Enter the mask length => ' MASK
+       read -p 'Enter the next-hop IP (GNS3 device) => ' NH
+
+       ISBR="$(brctl show  | grep $BR | awk '{ print $1; }')"
+       echo $ISBR
+       echo "check for bridge $BR"
+           if [[ $ISBR == $BR ]]; then
+               echo "Bridge $BR already exists! "
+               echo "Make sure to use the same subnet for a given bridge interface."
+               read -p 'Would you like to continue?  [Yy] [Nn]  ' CONT
+               while true; do
+                   case $CONT in
+                       [Yy]* ) break 1;;
+                       [Nn]* ) exit;;
+                        * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+                   esac
+               done
+           else 
+               echo "$BR doesn't exist"
+           fi 
+           if sudo pipework $BR -i $INT $1 $IP/$MASK@$NH ; then
+                sudo echo "command: >> sudo pipework $BR -i $INT $1 $IP/$MASK@$NH << successfully executed."
+           else
+                echo "pipework error!" 1>&2
+           fi
+           while true; do
+               read -p 'Would you like to continue with network configuration? [Yy] [Nn]  ' CONT
+               case $CONT in
+                   [Yy]* ) break 1;;
+                   [Nn]* ) exit;;
+                   * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+               esac
+            done
+   done
+}
 
 if [ "$#" -ne 2 ]
 then
-    echo "Usage: `basename $0` {image_tag} {container_name}" ;exit 2
+    echo "Usage: `$0` {image_tag} {container_name}" ;exit 2
 fi
 
 INAME=$1
