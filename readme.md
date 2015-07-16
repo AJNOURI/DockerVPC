@@ -10,7 +10,7 @@ Included tools in Docker image
 ------------------------------
 These tools are included in the image, so they are available in all generated containers.
 
-> **Tip:** You can install other tools if you make the container reach Internet either before connecting the container to GNS3 (through a bridge) or through your
+> **Tip:** You can install other tools if you make the container reach Internet either before connecting the container to GNS3 (through Docker0 interface) or through your
 GNS3 topology.
 
 > Nevertheless, the container VirtualPC is as flexible as a Docker container can be. Docker containers technology is developing very fast.
