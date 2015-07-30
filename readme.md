@@ -60,11 +60,11 @@ From Docker host:
 
 -------------
 #### <i class="icon-folder-open"></i> VLC (VideoLAN)
-Simply start vlc in background 
+Simply start vlc with username vlc in background 
 
-> vlc &
+> su -c “vlc” -s /bin/sh vlc &
 
-Small video files in different formats are provided for streaming testing.
+/media directory contains small video files in multiple formats are provided for streaming testing.
 
 -------------
 #### <i class="icon-folder-open"></i> Links2 browser
