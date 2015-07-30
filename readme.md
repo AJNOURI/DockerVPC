@@ -1,7 +1,7 @@
 VirtualPC container for GNS3
 =======================
 
-The goal is to take profit of docker containers to use inside GNS3 as (almost) full-fledged linux endhost instead of
+The goal is to take profit of docker containers to use inside GNS3 almost as a full-fledged linux endhost instead of
 using the very limited VPCS or an overkill virtual machine.
 
 This includes a script to manage containers and set networking parameters using pipework.
@@ -10,11 +10,10 @@ Included tools in Docker image
 ------------------------------
 These tools are included in the image, so they are available in all generated containers.
 
-> **Tip:** You can install other tools if you make the container reach Internet either before connecting the container to GNS3 (through Docker0 interface) or through your
-GNS3 topology.
-
-> Nevertheless, the container VirtualPC is as flexible as a Docker container can be. Docker containers technology is developing very fast.
-So this image will be subject to changes as container capabilities grow 
+> **Tip:** You can install other tools if you make the container reach Internet, either directly through host docker0 interface, or by connecting it to your GNS3 
+topology.
+> Nevertheless, the container VirtualPC is as flexible as a Docker container can be. 
+Docker container technology is developing very fast, so this image will be subject to changes as container capabilities grow.
 
 -------------
 #### <i class="icon-folder-open"></i> Apache server
@@ -22,14 +21,15 @@ Apache server
 
 > /usr/sbin/apachectl start
 
-From a another container connect to the server using ***curl*** or ***links2***
+    From a another container connect to the server using ***curl*** or ***links2***
 
 -------------
 #### <i class="icon-folder-open"></i> Traffic generation tools
 ##### **Ostinato**
-From container you want to control, start the server component of Ostinato “drone” in the background, so you can 
-continue to use the terminal: drone &
-From Docker host (Desktop OS), you start Ostinato client GUI: Type: ostinato and connect to containers IP running drone
+    From the running container, start the server component of Ostinato “drone” in the background, so you can 
+    continue to use the terminal: 
+>     drone &
+    From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
 ##### **D-ITG**
 ##### **iperf**
 
@@ -44,9 +44,9 @@ From the container, start SSHd:
 
 > /usr/sbin/sshd
 
-From Docker host: 
+From Docker host ssh to the container IP X.X.X.X: 
 
-> ssh root@
+> ssh root@X.X.X.X
 
 -------------
 #### <i class="icon-folder-open"></i> VoIP applications
@@ -59,7 +59,7 @@ From Docker host:
 
 
 -------------
-#### <i class="icon-folder-open"></i> <font color=’red’> VLC (VideoLAN) </font>
+#### <i class="icon-folder-open"></i> VLC (VideoLAN)
 Simply start vlc with username vlc in background 
 
 > su -c “vlc” -s /bin/sh vlc &
