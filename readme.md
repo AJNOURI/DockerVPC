@@ -64,11 +64,11 @@ Simply start vlc with username vlc in background
 
 > su -c “vlc” -s /bin/sh vlc &
 
-/media directory contains small video files in multiple formats are provided for streaming testing.
+/media directory contains small video files in multiple formats to play with.
 
 -------------
 #### <i class="icon-folder-open"></i> Links2 browser
-
+A minimalistic browser (text+graphic mode).
 Text mode: 
 
 > links <_url_>
