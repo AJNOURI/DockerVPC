@@ -59,7 +59,7 @@ From Docker host:
 
 
 -------------
-#### <i class="icon-folder-open"></i> VLC (VideoLAN)
+#### <i class="icon-folder-open"></i> <font color=’red’> VLC (VideoLAN) </font>
 Simply start vlc with username vlc in background 
 
 > su -c “vlc” -s /bin/sh vlc &
