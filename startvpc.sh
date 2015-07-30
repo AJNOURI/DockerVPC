@@ -5,14 +5,13 @@
 
 # $1 = Image tag
 # $2 = Container name
+
 function end_host(){
  # local variables
  # $1: container name
  # $2: Image tag
  xhost local:root
- lxterminal -e "sudo docker run --privileged -ti -v /tmp/.X11-unix:/tmp/.X11-unix
-                                                 -v /dev/snd:/dev/snd -e DISPLAY=unix$DISPLAY
-                                                 --name $1 $2 /bin/bash"
+ lxterminal -e "sudo docker run --privileged -ti -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/snd:/dev/snd -e DISPLAY=unix$DISPLAY --name $1 $2 /bin/bash"
 }
 
 function quagga(){
@@ -47,7 +46,7 @@ function networking(){
     if [[ $ISBR == $BR ]]; then
       echo "Bridge $BR already exists! "
       echo "Make sure to use the same subnet for a given bridge interface."
-      read -p 'Would you like to continue?  [Yy] [Nn]  ' CONT
+      read -p 'Would you like to apply these network settings?  [Yy] [Nn]  ' CONT
       while true; do
         case $CONT in
           [Yy]* ) break 1;;
@@ -64,11 +63,11 @@ function networking(){
       echo "pipework error!" 1>&2
     fi
     while true; do
-      read -p 'Would you like to continue with network configuration? [Yy] [Nn]  ' CONT
+      read -p 'Continue with network configuration[Cc], or quit[Qq]?  ' CONT
       case $CONT in
-        [Yy]* ) break 1;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+        [Cc]* ) break 1;;
+        [Qq]* ) exit;;
+        * ) echo "Please answer [Cc]* to continue  or [Qq]* to quit";;
       esac
     done
   done
