@@ -17,21 +17,21 @@ Docker container technology is developing very fast, so this image will be subje
 
 -------------
 #### <i class="icon-folder-open"></i> Apache server
-Apache server 
+#####- Apache server 
 
 > /usr/sbin/apachectl start
 
-    From a another container connect to the server using ***curl*** or ***links2***
+From a another container connect to the server using ***curl*** or ***links2***
 
 -------------
 #### <i class="icon-folder-open"></i> Traffic generation tools
-##### **Ostinato**
-    From the running container, start the server component of Ostinato “drone” in the background, so you can 
-    continue to use the terminal: 
+##### **- Ostinato**
+From the running container, start the server component of Ostinato “drone” in the background, so you can 
+continue to use the terminal: 
 >     drone &
-    From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
-##### **D-ITG**
-##### **iperf**
+From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
+##### - **D-ITG**
+##### - **iperf**
 
 -------------
 #### <i class="icon-folder-open"></i> SSH server to connect to connect to the Virtual PC from the host
