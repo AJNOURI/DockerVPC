@@ -11,7 +11,6 @@ CMD ["/sbin/my_init"]
 # Tell debconf to run in non-interactive mode
 ENV DEBIAN_FRONTEND noninteractive
 
-
 # Update the source list for appropriate repository, trusty 14.04 LTS, in this case.
 # Generated from:
 # https://wiki.ubuntu.com/DevelopmentCodeNames
@@ -86,27 +85,26 @@ RUN rm D-ITG-2.8.1-r1023-src.zip
 WORKDIR /D-ITG-2.8.1-r1023/src
 RUN make && make install PREFIX=/usr/local
 
+# Install other packages 
 RUN apt-get install linphone vlc links2 -y
 
-
+# Copy media files to use with vlc
 ADD ./media/small.3gp /media/small.3gp
 ADD ./media/small.flv /media/small.flv
 ADD ./media/small.mp4 /media/small.mp4
 ADD ./media/small.ogv /media/small.ogv
 ADD ./media/small.webm /media/small.webm
 
+# Add user vlc for VideoLAN to work.
 ENV HOME /home/vlc
 RUN useradd --create-home --home-dir $HOME vlc \
     && chown -R vlc:vlc $HOME \
     && chown -R vlc:vlc /media \
     && usermod -a -G audio,video vlc
 
-
 WORKDIR /
 
 CMD /bin/bash
-
-#EXPOSE 22 80 7878
 
 # Clean up APT
 #RUN apt-get clean && rm -rf /var/lib/apt/lists/*
