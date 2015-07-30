@@ -74,9 +74,9 @@ function networking(){
   done
 }
 
-if [ "$#" -ne 2 ]
-then
-  echo "Usage: `$0` {image_tag} {container_name}" ;exit 2
+if [ ! $# == 2 ]; then
+  echo "Usage: `$0` {image_tag} {container_name}"
+  exit 2
 fi
 
 INAME=$1
