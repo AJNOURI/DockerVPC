@@ -88,7 +88,7 @@ RUN make && make install PREFIX=/usr/local
 
 RUN apt-get install linphone vlc links2 -y
 
-RUN mkdir /media
+
 ADD ./media/small.3gp /media/small.3gp
 ADD ./media/small.flv /media/small.flv
 ADD ./media/small.mp4 /media/small.mp4
@@ -98,7 +98,7 @@ ADD ./media/small.webm /media/small.webm
 ENV HOME /home/vlc
 RUN useradd --create-home --home-dir $HOME vlc \
     && chown -R vlc:vlc $HOME \
-    && chown -R vlv:vlc /media
+    && chown -R vlc:vlc /media \
     && usermod -a -G audio,video vlc
 
 
