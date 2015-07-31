@@ -29,6 +29,7 @@ From a another container connect to the server using ***curl*** or ***links2***
 From the running container, start the server component of Ostinato “drone” in the background, so you can 
 continue to use the terminal: 
 >     drone &
+
 From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
 ##### - **D-ITG**
 Example from [D-ITG official documentation](http://traffic.comics.unina.it/software/ITG/manual/index.html#SECTION00051000000000000000)
