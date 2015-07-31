@@ -31,6 +31,15 @@ continue to use the terminal:
 >     drone &
 From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
 ##### - **D-ITG**
+Example from [D-ITG official documentation](http://traffic.comics.unina.it/software/ITG/manual/index.html#SECTION00051000000000000000)
+
+>Single UDP flow with constant inter-departure time between packets and constant packets size:
+>start the receiver on the destination host (10.0.0.3):
+>$ ./ITGRecv
+>start the sender on the source host (10.0.0.4):
+>$ ./ITGSend -a 10.0.0.3 -sp 9400 -rp 9500 -C 100 -c 500 -t 20000 -x recv_log_file
+
+
 ##### - **iperf**
 
 -------------
