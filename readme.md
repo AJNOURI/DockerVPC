@@ -33,19 +33,13 @@ sudo docker build -t gns3pc .
 The image will be used to run any number of container with the same content:
 
 #### <i class="icon-folder-open"></i> SSH server to connect to the Virtual PC from the host
-SSH access to the container: You can use your host keypairs 
-
-> cp ~/.ssh/id_rsa.pub id_rsa.pub
-
-or generate a keypair in the current directory (where Dockerfile is located) for use with SSH to container:
-
-> ssh-keygen -t rsa
+Docker copies your public from the repository directory into the built image to be used in all containers run from it.
 
 From the container, start SSHd: 
 
 > /usr/sbin/sshd
 
-From Docker host ssh to the container IP X.X.X.X: 
+From your Docker host, ssh to the container IP X.X.X.X: 
 
 > ssh root@X.X.X.X
 
@@ -54,10 +48,11 @@ From Docker host ssh to the container IP X.X.X.X:
 ------------------------------
 #### <i class="icon-folder-open"></i> Apache server
 #####- Apache server 
+Start Apache server:
 
 > /usr/sbin/apachectl start
 
-From a another container connect to the server using ***curl*** or ***links2***
+From another container connect to the server using ***curl*** or ***links2***
 
 -------------
 #### <i class="icon-folder-open"></i> Traffic generation tools
