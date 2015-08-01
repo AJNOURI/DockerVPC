@@ -73,7 +73,7 @@ function networking(){
   done
 }
 
-if [ ! $# == 2 ]; then
+if [ "$#" -ne 2 ]; then
   echo "Usage: `$0` {image_tag} {container_name}"
   exit 2
 fi
@@ -83,6 +83,13 @@ CNAME=$2
 IID="$(sudo docker images | grep $INAME | awk '{ print $3; }')"
 RCID="$(sudo docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
 CID="$(sudo docker ps -a | grep $CNAME | grep Exited | awk '{ print $1; }')"
+
+echo "INAME $INAME"
+echo "CNAME $CNAME"
+echo "IID $IID"
+echo "RCID $RCID"
+echo "CID $CID"
+
 
 if [[ ! $IID  ]]
 then

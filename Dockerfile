@@ -25,11 +25,13 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main unive
 RUN apt-get update && apt-get install -y wget git zip
 
 # Apache server
-RUN sudo apt-get install -y apache2
+RUN apt-get install -y apache2
 RUN apt-get install php5 libapache2-mod-php5 w3m -y
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-RUN /usr/sbin/apachectl restart
 
+# PHP Server (for IP detection)
+RUN apt-get install php5 libapache2-mod-php5
+ADD ./index.php /var/www/html/index.php
 
 # Enable SSH loging provided by Baseimage docker and regenerate keys
 RUN rm -f /etc/service/sshd/down
@@ -107,4 +109,4 @@ WORKDIR /
 CMD /bin/bash
 
 # Clean up APT
-#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
