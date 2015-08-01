@@ -15,6 +15,41 @@ topology.
 > Nevertheless, the container VirtualPC is as flexible as a Docker container can be. 
 Docker container technology is developing very fast, so this image will be subject to changes as container capabilities grow.
 
+
+Compile the image Included tools in Docker image
+------------------------------
+Before building the image, make sure to copy your public key to the the repository directory:
+cp /home/user/.ssh/id_rsa.pub id_rsa.pub
+
+or generate a special key pair:
+ssh-keygen -t rsa
+
+
+Now, build the image using the following command:
+sudo docker build -t <image-tag> <location-of-Dockerfile>
+ex:
+sudo docker build -t gns3pc .
+
+The image will be used to run any number of container with the same content:
+
+#### <i class="icon-folder-open"></i> SSH server to connect to the Virtual PC from the host
+SSH access to the container: You can use your host keypairs 
+
+> cp ~/.ssh/id_rsa.pub id_rsa.pub
+
+or generate a keypair in the current directory (where Dockerfile is located) for use with SSH to container:
+
+> ssh-keygen -t rsa
+
+From the container, start SSHd: 
+
+> /usr/sbin/sshd
+
+From Docker host ssh to the container IP X.X.X.X: 
+
+> ssh root@X.X.X.X
+
+
 -------------
 #### <i class="icon-folder-open"></i> Apache server
 #####- Apache server 
@@ -44,21 +79,6 @@ start the sender on the source host (10.0.0.4):
 
 
 ##### - **iperf**
-
--------------
-#### <i class="icon-folder-open"></i> SSH server to connect to connect to the Virtual PC from the host
-SSH access to the container: You can use your host keypairs 
-
-> cp /home//.ssh/id_rsa.pub id_rsa.pub
-
-or generate keypair in the current directory (where Dockerfile is located) for use with SSH to container:
-From the container, start SSHd: 
-
-> /usr/sbin/sshd
-
-From Docker host ssh to the container IP X.X.X.X: 
-
-> ssh root@X.X.X.X
 
 -------------
 #### <i class="icon-folder-open"></i> VoIP applications
