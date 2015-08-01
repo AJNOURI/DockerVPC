@@ -16,8 +16,8 @@ topology.
 Docker container technology is developing very fast, so this image will be subject to changes as container capabilities grow.
 
 
-Compile the image Included tools in Docker image
-------------------------------
+Compile the image 
+-------------
 Before building the image, make sure to copy your public key to the the repository directory:
 cp /home/user/.ssh/id_rsa.pub id_rsa.pub
 
@@ -50,7 +50,8 @@ From Docker host ssh to the container IP X.X.X.X:
 > ssh root@X.X.X.X
 
 
--------------
+
+------------------------------
 #### <i class="icon-folder-open"></i> Apache server
 #####- Apache server 
 
