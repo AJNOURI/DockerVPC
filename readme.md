@@ -6,17 +6,9 @@ using the very limited VPCS or an overkill virtual machine.
 
 This includes a script to manage containers and set networking parameters using pipework.
 
-Included tools in Docker image
+
 ------------------------------
-These tools are included in the image, so they are available in all generated containers.
 
-> **Tip:** You can install other tools if you make the container reach Internet, either directly through host docker0 interface, or by connecting it to your GNS3 
-topology.
-> Nevertheless, the container VirtualPC is as flexible as a Docker container can be. 
-Docker container technology is developing very fast, so this image will be subject to changes as container capabilities grow.
-
-
-Compile the image 
 -------------
 Before building the image, make sure to copy your public key to the the repository directory:
 
@@ -36,6 +28,18 @@ ex:
 >sudo docker build -t gns3pc .
 
 The image will be used to run any number of container with the same content:
+
+
+Included tools in Docker image
+------------------------------
+These tools are included in the image, so they are available in all generated containers.
+
+> **Tip:** You can install other tools if you make the container reach Internet, either directly through host docker0 interface, or by connecting it to your GNS3 
+topology.
+> Nevertheless, the container VirtualPC is as flexible as a Docker container can be. 
+Docker container technology is developing very fast, so this image will be subject to changes as container capabilities grow.
+
+
 
 #### <i class="icon-folder-open"></i> SSH server to connect to the Virtual PC from the host
 Docker copies your public from the repository directory into the built image to be used in all containers run from it.
