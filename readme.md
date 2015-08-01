@@ -19,16 +19,21 @@ Docker container technology is developing very fast, so this image will be subje
 Compile the image 
 -------------
 Before building the image, make sure to copy your public key to the the repository directory:
-cp /home/user/.ssh/id_rsa.pub id_rsa.pub
+
+> cp /home/user/.ssh/id_rsa.pub id_rsa.pub
 
 or generate a special key pair:
-ssh-keygen -t rsa
+
+> ssh-keygen -t rsa
 
 
 Now, build the image using the following command:
-sudo docker build -t <image-tag> <location-of-Dockerfile>
+
+> sudo docker build -t <image-tag> <location-of-Dockerfile>
+
 ex:
-sudo docker build -t gns3pc .
+
+>sudo docker build -t gns3pc .
 
 The image will be used to run any number of container with the same content:
 
