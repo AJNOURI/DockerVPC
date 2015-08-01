@@ -32,21 +32,20 @@ The image will be used to run any number of container with the same content:
 
 Start a container from the built image
 ------------------------------
->~/DockerVPC$  **./startvpc.sh gns3pc pc1**
->Spawning a new container
->non-network local connections being added to access control list
->Container networking... \n
->Continue? [Yy] [Nn] **y**
->Enter Host bridge to connect the container to => **br10**
->Enter a new interface inside the container to connect to host bridge => **eth1**
->Enter IP address (without mask) for the container interface => **192.168.10.1**
->Enter the mask length => **24**
->Enter the next-hop IP (GNS3 device) => **192.168.10.254**
->br10 doesn’t exist
->command: >> sudo pipework br10 -i eth1 a62dfeff0205 192.168.10.1/24@192.168.10.254 << successfully executed.
->Continue with network configuration[Cc], or quit[Qq]?  **q**
->~/DockerVPC$
-
+>~/DockerVPC$  **./startvpc.sh gns3pc pc1**  
+>Spawning a new container  
+>non-network local connections being added to access control list  
+>Container networking... \n  
+>Continue? [Yy] [Nn] **y**  
+>Enter Host bridge to connect the container to => **br10**  
+>Enter a new interface inside the container to connect to host bridge => **eth1**  
+>Enter IP address (without mask) for the container interface => **192.168.10.1**  
+>Enter the mask length => **24**  
+>Enter the next-hop IP (GNS3 device) => **192.168.10.254**  
+>br10 doesn’t exist  
+>command: >> sudo pipework br10 -i eth1 a62dfeff0205 192.168.10.1/24@192.168.10.254 << successfully executed.  
+>Continue with network configuration[Cc], or quit[Qq]?  **q**  
+>~/DockerVPC$  
 
 
 
