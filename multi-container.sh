@@ -51,9 +51,9 @@ else
     do
         echo -e "\nContainer $CNAMES $i\n"
         if [ "$#" -eq 6 ]; then
-            sudo docker run --dns=$6 -tid --name $CNAMES$i $ITAG /bin/bash
+            sudo docker run --dns=$6 -tid --hostname $CNAMES$i --name $CNAMES$i $ITAG /bin/bash
         else
-            sudo docker run -tid --name $CNAMES$i $ITAG /bin/bash
+            sudo docker run -tid --hostname $CNAMES$i --name $CNAMES$i $ITAG /bin/bash
         fi
         sleep 2
         CID="$(sudo docker ps | grep $CNAMES$i | awk '{ print $1; }')"
