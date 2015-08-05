@@ -93,9 +93,9 @@ ex: Start Apache on all containers
 
 1- Add container IP addresses in /etc/ansible/hosts
 
-> [containers]
-> 172.17.0.1
-> 172.17.0.2
+> [containers]  
+> 172.17.0.1  
+> 172.17.0.2  
 
 2- ~/DockerVPC$ **ansible containers -i /etc/ansible/hosts -m command -a “/usr/sbin/apachectl start” -u root**  
 > The authenticity of host ‘172.17.0.1 (172.17.0.1)’ can’t be established.  
