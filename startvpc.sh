@@ -11,7 +11,13 @@ function end_host(){
  # $1: container name
  # $2: Image tag
  xhost local:root
- lxterminal -e "sudo docker run --privileged -ti -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/snd:/dev/snd -e DISPLAY=unix$DISPLAY --name $1 $2 /bin/bash"
+ lxterminal -e "sudo docker run --privileged -ti \
+     -v /tmp/.X11-unix:/tmp/.X11-unix \
+     -v /dev/snd:/dev/snd \
+     -e DISPLAY=unix$DISPLAY \
+     --hostname $1 \
+     --name $1 $2 \
+     /bin/bash"
 }
 
 function quagga(){
@@ -22,14 +28,19 @@ function quagga(){
 }
 
 function networking(){
-  # $1 : The 1st argument passed to the function, container ID.
-  # Configure additional interfaces on the container:
-  # - host bridge to  which the interfaces is connected
-  # - container interface IP
-  # - gateway: the last configured gateway is used
-  echo "Container networking... \n"
+  # $1 : Container ID.
+  # Configure additional interfaces on the container and 
+  # connect them to host bridges.
+  # Required inputs from the user:
+  # - host bridge: to which we connect the new conatiner interface
+  # - The new container interface (name, IP and mask)
+  # - The new container interface IP
+  # - The new container interface
+  # - gateway: should be the IP of the next-hop simulated device in GNS3
+
+  echo "Container networking... "
   while true; do
-    read -p 'Continue? [Yy] [Nn]' NET
+    read -p 'Continue? [Yy] [Nn] ' NET
     case $NET in
     [Yy]* ) break;;
     [Nn]* ) exit;;
@@ -51,11 +62,11 @@ function networking(){
         case $CONT in
           [Yy]* ) break 1;;
           [Nn]* ) exit;;
-          * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+          * ) echo "Please answer yes [Yy]* or no [Nn] *";;
         esac
       done
     else
-      echo "$BR doesn't exist"
+      echo "$BR doesn't exist, creating it."
     fi
     if sudo pipework $BR -i $INT $1 $IP/$MASK@$NH ; then
       sudo echo "command: >> sudo pipework $BR -i $INT $1 $IP/$MASK@$NH << successfully executed."
@@ -67,30 +78,33 @@ function networking(){
       case $CONT in
         [Cc]* ) break 1;;
         [Qq]* ) exit;;
-        * ) echo "Please answer [Cc]* to continue  or [Qq]* to quit";;
+        * ) echo "Please answer [Cc]* to continue  or [Qq]* to quit ";;
       esac
     done
-  done
+done
+}
+
+usage(){
+  echo "Usage: $0 {image_tag} {container_name}"
+  exit 1
 }
 
 if [ "$#" -ne 2 ]; then
-  echo "Usage: `$0` {image_tag} {container_name}"
-  exit 2
+  usage
 fi
 
+# Image tag
 INAME=$1
+# Container name
 CNAME=$2
+# Image ID
 IID="$(sudo docker images | grep $INAME | awk '{ print $3; }')"
+# Running container ID
 RCID="$(sudo docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
+# Stopped container ID
 CID="$(sudo docker ps -a | grep $CNAME | grep Exited | awk '{ print $1; }')"
 
-echo "INAME $INAME"
-echo "CNAME $CNAME"
-echo "IID $IID"
-echo "RCID $RCID"
-echo "CID $CID"
-
-
+# Check whether the image exists
 if [[ ! $IID  ]]
 then
   echo " "
@@ -102,6 +116,7 @@ then
   exit
 fi
 
+# Check whether the container (by name) is running
 if [[ $RCID ]]
 then
   while true; do
@@ -112,11 +127,12 @@ then
       [Ss]* ) networking $CID; exit;;
       [Dd]* ) sudo docker stop $RCID; sudo docker rm $RCID; exit;;
       [Aa]* ) lxterminal -e "sudo docker attach $RCID";exit;;
-      * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+      * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
     esac
   done
 fi
 
+# Check whether a continer is created but stopped
 if [[ $CID  ]]
   then
     echo "Container ID: $CID"
@@ -127,7 +143,7 @@ if [[ $CID  ]]
       [Rr]* ) sudo docker start $CID;lxterminal -e "sudo docker attach $CNAME"; sleep 2;networking $CID; break;;
       [Dd]* ) sudo docker stop $CID; sudo docker rm $CID; exit;;
       [Ss]* ) exit;;
-      * ) echo "Please answer yes [Yy]* or no [Nn]*";;
+      * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
     esac
   done
 else

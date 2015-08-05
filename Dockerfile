@@ -88,7 +88,7 @@ WORKDIR /D-ITG-2.8.1-r1023/src
 RUN make && make install PREFIX=/usr/local
 
 # Install other packages 
-RUN apt-get install linphone vlc links2 -y
+RUN apt-get install wireshark linphone vlc links2 -y
 
 # Copy media files to use with vlc
 ADD ./media/small.3gp /media/small.3gp
@@ -109,4 +109,4 @@ WORKDIR /
 CMD /bin/bash
 
 # Clean up APT
-#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
