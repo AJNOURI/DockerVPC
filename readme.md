@@ -97,17 +97,18 @@ ex: Start Apache on all containers
 > 172.17.0.1
 > 172.17.0.2
 
-2- ~/DockerVPC$ **ansible containers -i /etc/ansible/hosts -m command -a “/usr/sbin/apachectl start” -u root** 
-> The authenticity of host ‘172.17.0.1 (172.17.0.1)’ can’t be established.
-> ECDSA key fingerprint is 60:e4:db:26:ac:0c:26:fe:53:0e:b1:86:12:28:55:35.
-> Are you sure you want to continue connecting (yes/no)? yes
-> The authenticity of host ‘172.17.0.2 (172.17.0.2)’ can’t be established.
-> ECDSA key fingerprint is 60:e4:db:26:ac:0c:26:fe:53:0e:b1:86:12:28:55:35.
-> Are you sure you want to continue connecting (yes/no)? yes
-> 172.17.0.1 | success | rc=0 >>
-> 
-> 
-> 172.17.0.2 | success | rc=0 >>
+2- ~/DockerVPC$ **ansible containers -i /etc/ansible/hosts -m command -a “/usr/sbin/apachectl start” -u root**  
+> The authenticity of host ‘172.17.0.1 (172.17.0.1)’ can’t be established.  
+> ECDSA key fingerprint is 60:e4:db:26:ac:0c:26:fe:53:0e:b1:86:12:28:55:35.  
+> Are you sure you want to continue connecting (yes/no)? yes  
+> The authenticity of host ‘172.17.0.2 (172.17.0.2)’ can’t be established.  
+> ECDSA key fingerprint is 60:e4:db:26:ac:0c:26:fe:53:0e:b1:86:12:28:55:35.  
+> Are you sure you want to continue connecting (yes/no)? yes  
+> 172.17.0.1 | success | rc=0 >>  
+>   
+>   
+> 172.17.0.2 | success | rc=0 >>  
+
 
 ------------------------------
 #### <i class="icon-folder-open"></i> Apache server
