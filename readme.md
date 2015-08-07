@@ -73,19 +73,19 @@ From your Docker host, ssh to the container IP X.X.X.X:
 > ssh root@X.X.X.X
 
 ------------------------------
-Some examples of playing with the containers remotely through SSH:
-
-Having SSHd enabled on the containers
-> /usr/sbin/sshd
-
-From the host send command through SSd
-> ssh root@172.17.0.1 ‘ip a’
-
-Remotely interact with the command:
-> ssh -t root@172.17.0.1 ‘top’
-
-Send multiple commands:
-> ssh root@172.17.0.1 ‘ip a; ps -aux; whoami’
+Some examples of playing with the containers remotely through SSH:  
+  
+Having SSHd enabled on the containers  
+> /usr/sbin/sshd  
+  
+From the host send command through SSd  
+> ssh root@172.17.0.1 ‘ip a’  
+  
+Remotely interact with the command:  
+> ssh -t root@172.17.0.1 ‘top’  
+  
+Send multiple commands:  
+> ssh root@172.17.0.1 ‘ip a; ps -aux; whoami’  
 
 Example of using ansible to send a command on multiple containers
 
@@ -173,54 +173,54 @@ Graphic mode:
 -------------
 #### <i class="icon-folder-open"></i> vSFTPd server & ftp client
 
-On the server container create a user
-> root@vsftpd1:/# ***adduser user1***
-> Adding user `user1’ ...
-> Adding new group `user1’ (1001) ...
-> Adding new user `user1’ (1001) with group `user1’ ...
-> Creating home directory `/home/user1’ ...
-> Copying files from `/etc/skel’ ...
-> Enter new UNIX password: 
-> Retype new UNIX password: 
-> passwd: password updated successfully
-> Changing the user information for user1
-> Enter the new value, or press ENTER for the default
->   Full Name []: 
->   Room Number []: 
->   Work Phone []: 
->   Home Phone []: 
->   Other []: 
-> Is the information correct? [Y/n] ***Y***
-> root@vsftpd1:/# 
-
-Enable sftpd:
-> root@vsftpd1:/# /usr/sbin/vsftpd
-
-On the client container:
-(X.X.X.X being the IP of the server container)
-
-> root@pc1:/# ***ftp -n 172.17.0.48***
-> Connected to 172.17.0.48.
-> 220 (vsFTPd 3.0.2)
-> ftp> ***user***
-> (username) ***user1***
-> 331 Please specify the password.
-> Password: 
-> 230 Login successful.
-> Remote system type is UNIX.
-> Using binary mode to transfer files.
-> ftp> ***ls -a***
-> 200 PORT command successful. Consider using PASV.
-> 150 Here comes the directory listing.
-> drwxr-xr-x    2 1001     1001         4096 Aug 07 06:48 .
-> drwxr-xr-x    5 0        0            4096 Aug 07 07:04 ..
-> -rw-r--r--    1 1001     1001          220 Aug 07 06:48 .bash_logout
-> -rw-r--r--    1 1001     1001         3637 Aug 07 06:48 .bashrc
-> -rw-r--r--    1 1001     1001          675 Aug 07 06:48 .profile
-> 226 Directory send OK.
-> ftp> ***pwd***
-> 257 “/home/user1”
-> ftp> 
+On the server container create a user  
+> root@vsftpd1:/# ***adduser user1***  
+> Adding user `user1’ ...  
+> Adding new group `user1’ (1001) ...  
+> Adding new user `user1’ (1001) with group `user1’ ...  
+> Creating home directory `/home/user1’ ...  
+> Copying files from `/etc/skel’ ...  
+> Enter new UNIX password:   
+> Retype new UNIX password:   
+> passwd: password updated successfully  
+> Changing the user information for user1  
+> Enter the new value, or press ENTER for the default  
+>   Full Name []:   
+>   Room Number []:   
+>   Work Phone []:   
+>   Home Phone []:   
+>   Other []:   
+> Is the information correct? [Y/n] ***Y***  
+> root@vsftpd1:/#   
+  
+Enable sftpd:  
+> root@vsftpd1:/# /usr/sbin/vsftpd  
+  
+On the client container:  
+(X.X.X.X being the IP of the server container)  
+  
+> root@pc1:/# ***ftp -n 172.17.0.48***  
+> Connected to 172.17.0.48.  
+> 220 (vsFTPd 3.0.2)  
+> ftp> ***user***  
+> (username) ***user1***  
+> 331 Please specify the password.  
+> Password:   
+> 230 Login successful.  
+> Remote system type is UNIX.  
+> Using binary mode to transfer files.  
+> ftp> ***ls -a***  
+> 200 PORT command successful. Consider using PASV.  
+> 150 Here comes the directory listing.  
+> drwxr-xr-x    2 1001     1001         4096 Aug 07 06:48 .  
+> drwxr-xr-x    5 0        0            4096 Aug 07 07:04 ..  
+> -rw-r--r--    1 1001     1001          220 Aug 07 06:48 .bash_logout  
+> -rw-r--r--    1 1001     1001         3637 Aug 07 06:48 .bashrc  
+> -rw-r--r--    1 1001     1001          675 Aug 07 06:48 .profile  
+> 226 Directory send OK.  
+> ftp> ***pwd***  
+> 257 “/home/user1”  
+> ftp>   
 
 
 -------------
