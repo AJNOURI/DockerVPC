@@ -104,21 +104,6 @@ RUN useradd --create-home --home-dir $HOME vlc \
     && chown -R vlc:vlc /media \
     && usermod -a -G audio,video vlc
 
-# Install ftp client & server
-RUN apt-get install -y vsftpd ftp
-
-# Enable local users  + disable anonymous
-RUN echo "local_enable=YES" >> /etc/vsftpd.conf
-RUN sed -i "s/anonymous_enable=YES/anonymous_enable=NO/" /etc/vsftpd.conf
-# enable users to write to their own directory
-RUN echo "write_enable=YES" >> /etc/vsftpd.conf
-RUN echo "chroot_list_file=/etc/vsftpd.chroot_list"  >> /etc/vsftpd.conf
-RUN mkdir -p /var/run/vsftpd/empty
-# Set default file permission for directory to 755 and files to 644
-RUN echo "local_umask=022" >> /etc/vsftpd.conf
-
-
-
 WORKDIR /
 
 CMD /bin/bash
