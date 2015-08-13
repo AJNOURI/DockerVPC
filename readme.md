@@ -6,6 +6,21 @@ using the very limited VPCS or an overkill virtual machine.
 
 This includes a script to manage containers and set networking parameters using pipework.
 
+Requirements
+------------------------------
+1.Docker [easy to install](https://docs.docker.com/installation/ubuntulinux/)
+
+> docker -v
+> Docker version 1.8.1, build d12ea79  
+ 
+2.pipework, a simple yet powerful bash script, for advanced docker networking  
+> sudo bash -c “curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework > /usr/local/bin/pipework”
+
+
+To use docker as non-root user
+> sudo usermod -aG docker {user}
+
+Otherwise, precede all “docker” commands (terminal and scripts) with sudo.
 
 
 Build VirtualPC image
@@ -225,4 +240,11 @@ On the client container:
 
 -------------
 #### <i class=”icon-folder-open”></i> And many other tools
-inetutils-traceroute, iputils-tracepath, mtr...
+inetutils-traceroute, iputils-tracepath, mtr...i
+
+
+References:
+--------------------
+https://registry.hub.docker.com/u/odiobill/vsftpd/
+https://registry.hub.docker.com/u/jess/
+

@@ -11,7 +11,7 @@ function end_host(){
  # $1: container name
  # $2: Image tag
  xhost local:root
- lxterminal -e "sudo docker run --privileged -ti \
+ lxterminal -e "docker run --privileged -ti \
      -v /tmp/.X11-unix:/tmp/.X11-unix \
      -v /dev/snd:/dev/snd \
      -e DISPLAY=unix$DISPLAY \
@@ -24,7 +24,7 @@ function quagga(){
   # local variable
   # $1: container name
   # $2: Image id
-  lxterminal -e "sudo docker run -t -i --privileged=true --name $1 $2 /bin/bash"
+  lxterminal -e "docker run -t -i --privileged=true --name $1 $2 /bin/bash"
 }
 
 function networking(){
@@ -98,11 +98,11 @@ INAME=$1
 # Container name
 CNAME=$2
 # Image ID
-IID="$(sudo docker images | grep $INAME | awk '{ print $3; }')"
+IID="$(docker images | grep $INAME | awk '{ print $3; }')"
 # Running container ID
-RCID="$(sudo docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
+RCID="$(docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
 # Stopped container ID
-CID="$(sudo docker ps -a | grep $CNAME | grep Exited | awk '{ print $1; }')"
+CID="$(docker ps -a | grep $CNAME | grep Exited | awk '{ print $1; }')"
 
 # Check whether the image exists
 if [[ ! $IID  ]]
@@ -111,7 +111,7 @@ then
   echo "There is no such image, please check the image list."
   echo "Otherwise compile your image from Dockerfile or pull it from DockerHub"
   echo " "
-  echo "$(sudo docker images)"
+  echo "$(docker images)"
   echo " "
   exit
 fi
@@ -123,10 +123,10 @@ then
     echo "There is a running container with the same name, $CNAME :CID= $RCID"
     read -p 'Would you like to [E]xit it, [D]elete it, [A]ttach a console or [S]kip? [Ee]/[Dd]/[Aa]/[Ss]  ' RESP
     case "$RESP" in
-      [Ee]* ) sudo docker stop $RCID;exit;;
+      [Ee]* ) docker stop $RCID;exit;;
       [Ss]* ) networking $CID; exit;;
-      [Dd]* ) sudo docker stop $RCID; sudo docker rm $RCID; exit;;
-      [Aa]* ) lxterminal -e "sudo docker attach $RCID";exit;;
+      [Dd]* ) docker stop $RCID; docker rm $RCID; exit;;
+      [Aa]* ) lxterminal -e "docker attach $RCID";exit;;
       * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
     esac
   done
@@ -140,8 +140,8 @@ if [[ $CID  ]]
     echo "There is a stopped container with the same name, $CNAME :CID= $CID"
     read -p 'Would you like to [R]un it or [D]elete it or [S]kip? [Rr]/[Dd]/[Ss]  ' RESP
     case $RESP in
-      [Rr]* ) sudo docker start $CID;lxterminal -e "sudo docker attach $CNAME"; sleep 2;networking $CID; break;;
-      [Dd]* ) sudo docker stop $CID; sudo docker rm $CID; exit;;
+      [Rr]* ) docker start $CID; lxterminal -e "docker attach $CNAME"; sleep 2;networking $CID; break;;
+      [Dd]* ) docker stop $CID; docker rm $CID; exit;;
       [Ss]* ) exit;;
       * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
     esac
@@ -150,6 +150,6 @@ else
   echo "Spawning a new container"
   end_host $CNAME $IID
   sleep 2
-  CID="$(sudo docker ps | grep $CNAME | awk '{ print $1; }')"
+  CID="$(docker ps | grep $CNAME | awk '{ print $1; }')"
   networking $CID
 fi
