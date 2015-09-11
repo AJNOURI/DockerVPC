@@ -26,8 +26,8 @@ Otherwise, precede all “docker” commands (terminal and scripts) with sudo.
 Build VirtualPC image
 ------------------------------
 Clone the repository
-> git clone https://github.com/AJNOURI/DockerVPC
-> cd DockerVPC
+> git clone https://github.com/AJNOURI/DockerVPC  
+> cd DockerVPC  
 
 Before building the image, make sure to copy your public key to the the repository directory:
 
