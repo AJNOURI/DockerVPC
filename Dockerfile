@@ -43,10 +43,8 @@ RUN mkdir -p /root/.ssh
 # Permanently enable the insecure-key
 RUN /usr/sbin/enable_insecure_key
 
-#RUN mkdir /var/run/sshd
-#RUN echo 'root:gns3vpc' | chpasswd
-#RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
+RUN echo 'root:gns3vpc' | chpasswd
+RUN sed -i "s/#PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config
 # SSH login fix. Otherwise user is kicked off after loging
 #RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
@@ -57,7 +55,7 @@ RUN /usr/sbin/enable_insecure_key
 # Miscellaneous tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
 mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev libpcap-dev libssl-dev \
-libnetfilter-queue-dev
+libnetfilter-queue-dev qupzilla openjdk-7-jdk icedtea-plugin gstreamer1.0*
 
 # Install IPv6-THC tool
 RUN git clone https://github.com/vanhauser-thc/thc-ipv6
