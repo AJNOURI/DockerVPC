@@ -37,13 +37,27 @@ ADD ./index.php /var/www/html/index.php
 RUN rm -f /etc/service/sshd/down
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 RUN mkdir -p /root/.ssh
-ADD id_rsa.pub /tmp/id_rsa.pub
-RUN cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys && rm -f /tmp/id_rsa.pub
+#ADD id_rsa.pub /tmp/id_rsa.pub
+#RUN cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys && rm -f /tmp/id_rsa.pub
+
+# Permanently enable the insecure-key
+RUN /usr/sbin/enable_insecure_key
+
+#RUN mkdir /var/run/sshd
+#RUN echo 'root:gns3vpc' | chpasswd
+#RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after loging
+#RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+#ENV NOTVISIBLE "in users profile"
+#RUN echo "export VISIBLE=now" >> /etc/profile
 
 
 # Miscellaneous tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
-mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev libpcap-dev libssl-dev
+mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev libpcap-dev libssl-dev \
+libnetfilter-queue-dev
 
 # Install IPv6-THC tool
 RUN git clone https://github.com/vanhauser-thc/thc-ipv6
@@ -118,10 +132,9 @@ RUN mkdir -p /var/run/vsftpd/empty
 RUN echo "local_umask=022" >> /etc/vsftpd.conf
 
 
-
 WORKDIR /
 
-CMD /bin/bash
+#CMD /bin/bash
 
 # Clean up APT
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
