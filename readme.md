@@ -15,15 +15,19 @@ Requirements
  
 2.pipework, a simple yet powerful bash script, for advanced docker networking  
 > sudo bash -c “curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework > /usr/local/bin/pipework”
+> sudo chmod a+x /usr/local/bin/pipework
 
 
 To use docker as non-root user
 > sudo usermod -aG docker {user}
 
-Otherwise, precede all “docker” commands (terminal and scripts) with sudo.
 
 
-Build VirtualPC image
+Running DockerVPC image
+------------------------------
+
+
+Manually Build DockerVPC image
 ------------------------------
 Clone the repository
 > git clone https://github.com/AJNOURI/DockerVPC  
@@ -80,43 +84,40 @@ Docker container technology is developing very fast, so this image will be subje
 
 
 
-#### <i class="icon-folder-open"></i> SSH server to connect to the Virtual PC from the host
-Docker copies your public from the repository directory into the built image to be used in all containers run from it.
+#### <i class="icon-folder-open"></i> SSH server
+ **Connect to the container using password-chalenge**  
 
-From the container, start SSHd: 
+- Start SSHD on the server container  
+root@pc2:/# /usr/sbin/sshd    
+>The default SSH password for user ***root*** is ***gns3vpc***
 
-> /usr/sbin/sshd
+- From gns3 host  
+$ ssh root@172.17.0.3  
+>The authenticity of host '172.17.0.3 (172.17.0.3)' can't be >established.
+>ECDSA key fingerprint is >af:c3:85:55:5e:f5:66:cd:b5:99:8b:85:05:c5:27:42.
+>Are you sure you want to continue connecting (yes/no)? yes
+>Failed to add the host to the list of known hosts (/home/ajn/.ssh/known_hosts).
+>root@172.17.0.3's password: 
+>Last login: Sat Oct 17 14:42:30 2015 from 172.17.42.1
+>root@pc2:~#   
 
-From your Docker host, ssh to the container IP X.X.X.X: 
-
-> ssh root@X.X.X.X
+- From another container  
+root@pc1:/# ssh root@192.168.22.1  
+>root@192.168.22.1's password: 
+>Last login: Sat Oct 17 14:45:16 2015 from 172.17.42.1
+>root@pc2:~# 
 
 ------------------------------
-Some examples of playing with the containers remotely through SSH:  
-  
-Having SSHd enabled on the containers  
-> /usr/sbin/sshd  
-  
-From the host send command through SSd  
-> ssh root@172.17.0.1 ‘ip a’  
-  
-Remotely interact with the command:  
-> ssh -t root@172.17.0.1 ‘top’  
-  
-Send multiple commands:  
-> ssh root@172.17.0.1 ‘ip a; ps -aux; whoami’  
+**Example of using ansible to manage multiple DockerVPCs**
 
-Example of using ansible to send a command on multiple containers
+Let's start Apache on multiple containers
 
-ex: Start Apache on all containers
-
-1- Add container IP addresses in /etc/ansible/hosts
-
+- Add container IP addresses in /etc/ansible/hosts
 > [containers]  
 > 172.17.0.1  
 > 172.17.0.2  
 
-2- ~/DockerVPC$ **ansible containers -i /etc/ansible/hosts -m command -a “/usr/sbin/apachectl start” -u root**  
+- $ ansible containers -i /etc/ansible/hosts -m command -a “/usr/sbin/apachectl start” -u root  
 > The authenticity of host ‘172.17.0.1 (172.17.0.1)’ can’t be established.  
 > ECDSA key fingerprint is 60:e4:db:26:ac:0c:26:fe:53:0e:b1:86:12:28:55:35.  
 > Are you sure you want to continue connecting (yes/no)? yes  
@@ -124,41 +125,49 @@ ex: Start Apache on all containers
 > ECDSA key fingerprint is 60:e4:db:26:ac:0c:26:fe:53:0e:b1:86:12:28:55:35.  
 > Are you sure you want to continue connecting (yes/no)? yes  
 > 172.17.0.1 | success | rc=0 >>  
->   
->   
 > 172.17.0.2 | success | rc=0 >>  
 
 
+
+
 ------------------------------
+#### <i class="icon-folder-open"></i> Qupzilla browser
+
+- More lightweight than Firefox and supports Java and html5, but still troubleshooting flash support.  
+Just start it:   
+> qupzilla &
+
+-------------
 #### <i class="icon-folder-open"></i> Apache server
-#####- Apache server 
-Start Apache server:
+- Start Apache server:
 
 > /usr/sbin/apachectl start
 
-From another container connect to the server using ***curl*** or ***links2***
+- From another container connect to the server using ***curl*** , ***links2*** or ***Qupzilla***.
 
 -------------
 #### <i class="icon-folder-open"></i> Traffic generation tools
 ##### **- Ostinato**
-From the running container, start the server component of Ostinato “drone” in the background, so you can 
+- From the running container, start the server component of Ostinato “drone” in the background, so you can 
 continue to use the terminal: 
 >drone &
 
-From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
+- From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
 ##### - **D-ITG**
-Example from [D-ITG official documentation](http://traffic.comics.unina.it/software/ITG/manual/index.html#SECTION00051000000000000000)
-
-Single UDP flow with constant inter-departure time between packets and constant packets size:
+- Single UDP flow with constant inter-departure time between packets and constant packets size:  
 start the receiver on the destination host (10.0.0.3):
 >$ ./ITGRecv
 
-start the sender on the source host (10.0.0.4):
-
+- start the sender on the source host (10.0.0.4):
 >$ ./ITGSend -a 10.0.0.3 -sp 9400 -rp 9500 -C 100 -c 500 -t 20000 -x recv_log_file
 
 
 ##### - **iperf**
+- on the destination container (ex: 192.168.22.1):
+>iperf -s  
+
+- on the source container:  
+>iperf -c 192.168.22.1
 
 -------------
 #### <i class="icon-folder-open"></i> VoIP applications
@@ -172,27 +181,27 @@ start the sender on the source host (10.0.0.4):
 
 -------------
 #### <i class="icon-folder-open"></i> VLC (VideoLAN)
-Simply start vlc with username vlc in background 
+- Simply start vlc with username vlc in background 
 
-> su -c “vlc” -s /bin/sh vlc &
+> su -c “vlc” -s /bin/sh vlc &  
 
 **/media** directory contains small video files in multiple formats to play with.
 
 -------------
 #### <i class="icon-folder-open"></i> Links2 browser
-A minimalistic browser (text+graphic mode).
+- A minimalistic browser (text+graphic mode).  
 Text mode: 
 
 > links <_url_>
 
-Graphic mode: 
+- Graphic mode: 
 
 > links2 -g <_url_>
 
 -------------
 #### <i class="icon-folder-open"></i> vSFTPd server & ftp client
 
-On the server container create a user  
+- On the server container create a user  
 > root@vsftpd1:/# ***adduser user1***  
 > Adding user `user1’ ...  
 > Adding new group `user1’ (1001) ...  
@@ -212,12 +221,11 @@ On the server container create a user
 > Is the information correct? [Y/n] ***Y***  
 > root@vsftpd1:/#   
   
-Enable sftpd:  
+- Enable sftpd:  
 > root@vsftpd1:/# /usr/sbin/vsftpd  
   
-On the client container:  
-(X.X.X.X being the IP of the server container)  
-  
+- On the client container:  
+(ex: 172.17.0.48 is IP of the server container)  
 > root@pc1:/# ***ftp -n 172.17.0.48***  
 > Connected to 172.17.0.48.  
 > 220 (vsFTPd 3.0.2)  
@@ -249,6 +257,6 @@ inetutils-traceroute, iputils-tracepath, mtr...i
 
 References:
 --------------------
-https://registry.hub.docker.com/u/odiobill/vsftpd/
-https://registry.hub.docker.com/u/jess/
-
+https://registry.hub.docker.com/u/odiobill/vsftpd/  
+https://registry.hub.docker.com/u/jess/  
+https://github.com/alexismp/OpenJDK-Docker/blob/master/debian/Dockerfile
