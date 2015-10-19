@@ -8,32 +8,41 @@ This includes a script to manage containers and set networking parameters using 
 
 Requirements
 ------------------------------
-1.Docker [easy to install](https://docs.docker.com/installation/ubuntulinux/)
+You will need: git, docker, pipework and lxterminal.
 
-> docker -v
+1.git  
+> sudo apt-get install git  
+
+2.Docker [easy to install](https://docs.docker.com/installation/ubuntulinux/)  
+> docker -v  
 > Docker version 1.8.1, build d12ea79  
  
-2.pipework, a simple yet powerful bash script, for advanced docker networking  
-> sudo bash -c “curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework > /usr/local/bin/pipework”
-> sudo chmod a+x /usr/local/bin/pipework
+3.pipework, a simple yet powerful bash script, for advanced docker networking  
+> sudo bash -c “curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework > /usr/local/bin/pipework”  
+> sudo chmod a+x /usr/local/bin/pipework  
 
+4.lxterminal  
+> sudo apt-get install lxterminal  
 
 To use docker as non-root user
 > sudo usermod -aG docker {user}
 
 
 
-Running DockerVPC image
+Pull DockerVPC image from DockerHub
 ------------------------------
+> docker pull ajnouri/dockervpc
 
 
 Manually Build DockerVPC image
 ------------------------------
-Clone the repository
+After cloning the repository you can modify Dockerfile, to add your own tools or alleviate it, and rebuild it manually.
+Clone the repository  
+
 > git clone https://github.com/AJNOURI/DockerVPC  
 > cd DockerVPC  
 
-Before building the image, make sure to copy your public key to the the repository directory:
+If you want to use public keys for SSH authentication you will have to generate or copy your own public key in the repository directory and build the image manually.
 
 > cp /home/user/.ssh/id_rsa.pub id_rsa.pub
 
@@ -44,18 +53,18 @@ or generate a special key pair:
 
 Now, build the image using the following command:
 
-> sudo docker build -t   {image-tag}  {location-of-Dockerfile}
+> sudo docker build -t  {image-tag} {location-of-Dockerfile}
 
-ex:
+ex:  
 
->sudo docker build -t gns3pc .
+>sudo docker build -t dockervpc .  
 
 The image will be used to run any number of container with the same content:
 
 
-Start a container from the built image
+Start a container  
 ------------------------------
->~/DockerVPC$  **./startvpc.sh gns3pc pc1**  
+>~/DockerVPC$  **./startvpc.sh dockervpc pc1**  
 >Spawning a new container  
 >non-network local connections being added to access control list  
 >Container networking... \n  
