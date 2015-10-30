@@ -1,5 +1,6 @@
 VirtualPC container for GNS3
 =======================
+Tested platforms: ***Ubuntu, OpenSuse, Redhat***
 
 The goal is to take profit of docker containers to use inside GNS3 almost as a full-fledged linux endhost instead of
 using the very limited VPCS or an overkill virtual machine.
