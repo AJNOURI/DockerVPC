@@ -57,6 +57,11 @@ function single_run(){
   }
 
 function cacti_run(){
+  # Run caci container
+  # local variable
+  # $1: container name
+  RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
+  if [[ $RUN_ID ]] ; then
   single_run quantumobject/docker-cacti
   CACTI_ID=$(docker run -d -p 80 -p 161:161 --name $1 quantumobject/docker-cacti)
   if [[ $CACTI_ID ]] ; then
@@ -71,23 +76,27 @@ function cacti_run(){
 }
 
 function ovs_run(){
- single_run socketplane/openvswitch
- echo "Running ovs container..."
- ovsid=$(sudo docker run -itd --name $1 --cap-add NET_ADMIN socketplane/openvswitch)
- echo -n "Adding interfaces "
- OVSINT=16
- for i in $(seq -w 1 $OVSINT)
-   do
-     sudo pipework br1$i -i eth$i $ovsid 0/0
-     echo -n "."
-     sleep 1
-   done
- echo ""
- lxterminal -e "docker exec -it $ovsid /bin/sh"
+  # Run ovs container
+  # local variable
+  # $1: container name
+  RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
+  if [[ $RUN_ID ]] ; then
+  single_run socketplane/openvswitch
+  echo "Running ovs container..."
+  ovsid=$(sudo docker run -itd --name $1 --cap-add NET_ADMIN socketplane/openvswitch)
+  echo -n "Adding interfaces "
+  OVSINT=16
+  for i in $(seq -w 1 $OVSINT)
+    do
+      sudo pipework br1$i -i eth$i $ovsid 0/0
+      echo -n "."
+      sleep 1
+    done
+  echo ""
+  lxterminal -e "docker exec -it $ovsid /bin/sh"
 }
 
 function networking(){
-  # $1 : Container ID.
   # Configure additional interfaces on the container and 
   # connect them to host bridges.
   # Required inputs from the user:
@@ -96,6 +105,8 @@ function networking(){
   # - The new container interface IP
   # - The new container interface
   # - gateway: should be the IP of the next-hop simulated device in GNS3
+  # local variable
+  # $1 : Container ID.
 
   echo "Container networking... "
   while true; do
@@ -183,19 +194,6 @@ then
    *) echo "This image is not supported by the script";exit;;
   esac
   echo " "
-#  echo "There is no such image stored locally."
-#  echo "local storage :"
-#  echo "$(docker images)"
-#  read -p 'Would you like to pull the image from dockerhub? [Yy] [Nn]  ' CONT
-#  echo " "
-#  while true; do
-#    case $CONT in
-#      [Yy]* ) break 1;;
-#      [Nn]* ) exit;;
-#      * ) echo "Please answer yes [Yy]* or no [Nn] *";;
-#    esac
-#  done
-#  docker pull $pullname
 fi
 
 # Check whether the container (by name) is running
