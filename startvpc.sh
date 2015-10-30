@@ -2,17 +2,14 @@
 
 # AJ NOURI: cciethebeginning.wordpress.com
 # Email: ajn.bin@gmail.com
-
 # $1 = Image tag
 # $2 = Container name
-
 
 
 function run_container(){
  # local variables
  # $1: container name
  # $2: Image tag
-
  case "$INAME" in
   cacti) cacti_run $1;;
   ovs) ovs_run $1;;
@@ -34,7 +31,8 @@ function end_host_run(){
      --hostname $1 \
      --name $1 $2 \
      /bin/bash"
-}
+ }
+
 
 function single_run(){
   # Limit to a single running container for some images
@@ -50,11 +48,12 @@ function single_run(){
         [Ee]* ) docker stop $RUN_ID;exit;;
         [Ss]* ) exit;;
         [Dd]* ) docker stop $RUN_ID; docker rm $RUN_ID; exit;;
-         * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
+        * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
       esac
     done
   fi
   }
+
 
 function cacti_run(){
   # Run caci container
@@ -62,7 +61,9 @@ function cacti_run(){
   # $1: container name
   RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
   if [[ $RUN_ID ]] ; then
-  single_run quantumobject/docker-cacti
+      single_run quantumobject/docker-cacti
+  fi
+
   CACTI_ID=$(docker run -d -p 80 -p 161:161 --name $1 quantumobject/docker-cacti)
   if [[ $CACTI_ID ]] ; then
       echo "Cacti container Successfully started."
@@ -75,13 +76,15 @@ function cacti_run(){
   fi
 }
 
+
 function ovs_run(){
   # Run ovs container
   # local variable
   # $1: container name
   RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
   if [[ $RUN_ID ]] ; then
-  single_run socketplane/openvswitch
+      single_run socketplane/openvswitch
+  fi
   echo "Running ovs container..."
   ovsid=$(sudo docker run -itd --name $1 --cap-add NET_ADMIN socketplane/openvswitch)
   echo -n "Adding interfaces "
@@ -96,8 +99,9 @@ function ovs_run(){
   lxterminal -e "docker exec -it $ovsid /bin/sh"
 }
 
+
 function networking(){
-  # Configure additional interfaces on the container and 
+  # Configure additional interfaces on the container and
   # connect them to host bridges.
   # Required inputs from the user:
   # - host bridge: to which we connect the new conatiner interface
@@ -107,7 +111,6 @@ function networking(){
   # - gateway: should be the IP of the next-hop simulated device in GNS3
   # local variable
   # $1 : Container ID.
-
   echo "Container networking... "
   while true; do
     read -p 'Continue? [Yy] [Nn] ' NET
@@ -156,6 +159,7 @@ function networking(){
 done
 }
 
+
 usage(){
   echo "Usage: $0 {image_tag} {container_name}"
   echo ""
@@ -167,6 +171,7 @@ usage(){
 
   exit 1
 }
+
 
 if [ "$#" -ne 2 ]; then
   usage
