@@ -10,69 +10,63 @@ function run_container(){
  # local variables
  # $1: container name
  # $2: Image tag
+ # $3: Running container ID
  case "$INAME" in
-  cacti) cacti_run $1;;
-  ovs) ovs_run $1;;
-  dockervpc) end_host_run $1 $2;;
+  cacti) cacti_run $1 $3 ;;
+  ovs) ovs_run $1 $2;;
+  dockervpc) end_host_run $1 $2 $3;;
   *) echo "Please Provide an existing image tag";;
  esac
 }
-
 
 function end_host_run(){
  # local variables
  # $1: container name
  # $2: Image tag
- xhost local:root
- lxterminal -e "docker run --privileged -ti \
-     -v /tmp/.X11-unix:/tmp/.X11-unix \
-     -v /dev/snd:/dev/snd \
-     -e DISPLAY=unix$DISPLAY \
-     --hostname $1 \
-     --name $1 $2 \
-     /bin/bash"
+ if [[ $3 ]] ; then
+     docker start $3
+    lxterminal -e "docker attach $1"
+    sleep 2
+    networking $3
+    exit
+ else
+     xhost local:root
+     lxterminal -e "docker run --privileged -ti \
+         -v /tmp/.X11-unix:/tmp/.X11-unix \
+         -v /dev/snd:/dev/snd \
+         -e DISPLAY=unix$DISPLAY \
+         --hostname $1 \
+         --name $1 $2 \
+         /bin/bash"
+ fi
  }
-
-
-function single_run(){
-  # Limit to a single running container for some images
-  # local variable
-  # $1: container name
-  RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
-  if [[ $RUN_ID ]] ; then
-    echo "There is already a running container, $RUN_ID, from the same image $1"
-    echo " >>> Only one single container from this image can be run <<<"
-    while true; do
-      read -p 'Would you like to [E]xit it, [D]elete it or [S]kip? [Ee]/[Dd]/[Ss]  ' RESP
-      case "$RESP" in
-        [Ee]* ) docker stop $RUN_ID;exit;;
-        [Ss]* ) exit;;
-        [Dd]* ) docker stop $RUN_ID; docker rm $RUN_ID; exit;;
-        * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
-      esac
-    done
-  fi
-  }
 
 
 function cacti_run(){
   # Run caci container
   # local variable
   # $1: container name
-  RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
-  if [[ $RUN_ID ]] ; then
-      single_run quantumobject/docker-cacti
-  fi
-
-  CACTI_ID=$(docker run -d -p 80 -p 161:161 --name $1 quantumobject/docker-cacti)
-  if [[ $CACTI_ID ]] ; then
-      echo "Cacti container Successfully started."
-      CACTI_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' $CACTI_ID)
-      echo "Cacti is reachable through http://$CACTI_IP:80/cacti"
+  # $2: Running container ID
+#  CACTI_ID=$(docker ps -a | grep $1 | awk '{ print $1; }')
+#  echo "CACTI_ID=$CACTI_ID"
+#  echo "\$2=$2"
+  
+  if [[ $2 ]] ; then
+      docker start $2
+      CIP="$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' $2)"
+      echo "Cacti is reachable through http://$CIP:80/cacti"
       exit
   else
-      echo "Issue running Cacti container" 1>&2
-      exit
+      CACTI_ID=$(docker run -d -p 80 -p 161:161 --name $1 quantumobject/docker-cacti)
+      if [[ $CACTI_ID ]] ; then
+          echo "Cacti container Successfully started."
+          CIP=$(docker inspect -f '{{.NetworkSettings.IPAddress}}' $CACTI_ID)
+          echo "Cacti is reachable through http://$CIP:80/cacti"
+          exit
+      else
+          echo "Issue running Cacti container" 1>&2
+          exit
+      fi
   fi
 }
 
@@ -81,24 +75,39 @@ function ovs_run(){
   # Run ovs container
   # local variable
   # $1: container name
-  RUN_ID=$(docker ps | grep $1 | awk '{ print $1; }')
-  if [[ $RUN_ID ]] ; then
-      single_run socketplane/openvswitch
+  # $2: Stopped container ID if exist
+#  OVS_ID=$(docker ps | grep $1 | awk '{ print $1; }')
+  if [[ $2 ]] ; then
+      docker start $2
+      lxterminal -e "docker exec -it $2 /bin/sh"
+  else
+      echo "Running ovs container..."
+      ovsid=$(sudo docker run -itd --name $1 --cap-add NET_ADMIN socketplane/openvswitch)
+      echo -n "Adding interfaces "
+      OVSINT=16
+      for i in $(seq -w 1 $OVSINT)
+        do
+          sudo pipework br1$i -i eth$i $ovsid 0/0
+          echo -n "."
+          sleep 1
+        done
+      echo ""
+      lxterminal -e "docker exec -it $ovsid /bin/sh"
   fi
-  echo "Running ovs container..."
-  ovsid=$(sudo docker run -itd --name $1 --cap-add NET_ADMIN socketplane/openvswitch)
-  echo -n "Adding interfaces "
-  OVSINT=16
-  for i in $(seq -w 1 $OVSINT)
-    do
-      sudo pipework br1$i -i eth$i $ovsid 0/0
-      echo -n "."
-      sleep 1
-    done
-  echo ""
-  lxterminal -e "docker exec -it $ovsid /bin/sh"
 }
 
+function stop_del_exit(){
+  while true; do
+    echo "There is a already a running container from $1 image"
+    read -p 'Would you like to [S]top it, [D]elete it or [q]uit? [Ss]/[Dd]/[Qq]  ' RESP
+    case "$RESP" in
+      [Ss]* ) docker stop $2;exit;;
+      [Dd]* ) docker stop $2; docker rm $2; exit;;
+      [Qq]* ) exit;;
+      * ) echo "Please answer by [Ss], [Dd] or [Qq] ";;
+    esac
+  done
+}
 
 function networking(){
   # Configure additional interfaces on the container and
@@ -183,10 +192,26 @@ INAME=$1
 CNAME=$2
 # Image ID
 IID="$(docker images | grep $INAME | awk '{ print $3; }')"
-# Running container ID
+# Running container ID by name
 RCID="$(docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
+# Running container ID by image tag
+RCID_ITAG="$(docker ps -a | grep $CNAME | grep Up | awk '{ print $1; }')"
 # Stopped container ID
-CID="$(docker ps -a | grep $CNAME | grep Exited | awk '{ print $1; }')"
+CID="$(docker ps -a | grep $CNAME | grep 'Exited\|Created' | awk '{ print $1; }')"
+#container running from cacti image
+CACTI_IMAGE_UP="$(docker ps --format '{{.ID}} {{.Image}}' | grep cacti)"
+#container running from openvswitch image
+OVS_IMAGE_UP="$(docker ps --format '{{.ID}} {{.Image}}' | grep openvswitch)"
+
+if [[ $CACTI_IMAGE_UP && $INAME == "cacti" ]]; then
+    RCID=$(docker ps --format "{{.ID}} {{.Image}}" | grep cacti | awk '{ print $1; }')
+    stop_del_exit $INAME $RCID
+fi
+
+if [[ $OVS_IMAGE_UP && $INAME == "ovs" ]]; then
+    RCID=$(docker ps --format "{{.ID}} {{.Image}}" | grep openvswitch | awk '{ print $1 }')
+    stop_del_exit $INAME $RCID
+fi
 
 # Check whether the image exists
 
@@ -206,29 +231,33 @@ if [[ $RCID ]]
 then
   while true; do
     echo "There is a running container with the same name, $CNAME :CID= $RCID"
-    read -p 'Would you like to [E]xit it, [D]elete it, [A]ttach a console or [S]kip? [Ee]/[Dd]/[Aa]/[Ss]  ' RESP
+    read -p 'Would you like to [S]top it, [D]elete it, [A]ttach a console or s[K]ip? [Ss]/[Dd]/[Aa]/[Kk]  ' RESP
     case "$RESP" in
-      [Ee]* ) docker stop $RCID;exit;;
-      [Ss]* ) networking $RCID; exit;;
+      [Ss]* ) docker stop $RCID;exit;;
+      [Kk]* ) networking $RCID; exit;;
       [Dd]* ) docker stop $RCID; docker rm $RCID; exit;;
-      [Aa]* ) lxterminal -e "docker attach $RCID";exit;;
-      * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
+      [Aa]* ) if [[ $INAME == "dockervpc" ]]; then
+              lxterminal -e "docker attach $RCID";exit;
+          elif [[ $INAME == "ovs" ]]; then
+              docker exec -it $RCID /bin/sh;exit;
+          fi;;
+      * ) echo "Please answer by [Ss], [Dd], [Aa] or [Kk] ";;
     esac
   done
 fi
 
-# Check whether a continer is created but stopped
+# Check whether a container is created but stopped
 if [[ $CID  ]]
   then
     echo "Container ID: $CID"
     while true; do
     echo "There is a stopped container with the same name, $CNAME :CID= $CID"
-    read -p 'Would you like to [R]un it or [D]elete it or [S]kip? [Rr]/[Dd]/[Ss]  ' RESP
+    read -p 'Would you like to [R]un it or [D]elete it or s[K]ip? [Rr]/[Dd]/[Kk]  ' RESP
     case $RESP in
-      [Rr]* ) docker start $CID; lxterminal -e "docker attach $CNAME"; sleep 2;networking $CID; break;;
+      [Rr]* ) run_container $CNAME $IID $CID; break;;
       [Dd]* ) docker stop $CID; docker rm $CID; exit;;
-      [Ss]* ) exit;;
-      * ) echo "Please answer yes [Yy]* or no [Nn]* ";;
+      [Kk]* ) exit;;
+      * ) echo "Please answer by [Rr], [Dd] or [Kk] ";;
     esac
   done
 else
