@@ -30,9 +30,14 @@ To use docker as non-root user
 
 
 
-Pull DockerVPC image from DockerHub
+Pull images from DockerHub
 ------------------------------
+The script will automatically pull the latest iused images from DockerHUb, if they do not exist locally.
+
+You can do it manually If you want:
 > docker pull ajnouri/dockervpc
+> docker pull quantumobject/docker-cacti
+> docker pull socketplane/openvswitch
 
 
 Manually Build DockerVPC image
