@@ -24,7 +24,7 @@ function end_host_run(){
  # $1: container name
  # $2: Image tag
  if [[ $3 ]] ; then
-     docker start $3
+    docker start $3
     lxterminal -e "docker attach $1"
     sleep 2
     networking $3
@@ -224,6 +224,9 @@ then
    *) echo "This image is not supported by the script";exit;;
   esac
   echo " "
+  docker pull $pullname
+  #Recalculate image ID
+  IID="$(docker images | grep $INAME | awk '{ print $3; }')"
 fi
 
 # Check whether the container (by name) is running
