@@ -185,6 +185,10 @@ start the receiver on the destination host (10.0.0.3):
 >iperf -c 192.168.22.1
 
 -------------
+#### <i class="icon-folder-open"></i> Bird Internet routing daemon
+Inject thousands of routes into your GNS3 topology from any DockerVPC container.
+
+-------------
 #### <i class="icon-folder-open"></i> VoIP applications
 ##### **sipp (text-based)**
 ##### **pjsua (text-based)**
