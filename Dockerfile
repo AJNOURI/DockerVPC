@@ -55,9 +55,16 @@ RUN sed -i "s/#PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/s
 # Miscellaneous tools
 RUN sudo apt-get install -y iperf inetutils-traceroute iputils-tracepath \
 mtr dnsutils sip-tester build-essential sip-tester tcpdump packeth libasound2-dev libpcap-dev libssl-dev \
-libnetfilter-queue-dev qupzilla openjdk-7-jdk icedtea-plugin gstreamer1.0*
+libnetfilter-queue-dev qupzilla openjdk-7-jdk icedtea-plugin gstreamer1.0* libreadline6 \
+libreadline6-dev autoconf flex bison libncurses5-dev libncursesw5-dev
+
+# Install BIRD internet routing
+RUN wget ftp://bird.network.cz/pub/bird/bird-1.5.0.tar.gz && tar -zxvf bird-1.5.0.tar.gz && rm bird-1.5.0.tar.gz
+WORKDIR bird-1.5.0
+RUN ./configure && make && make install
 
 # Install IPv6-THC tool
+WORKDIR /
 RUN git clone https://github.com/vanhauser-thc/thc-ipv6
 WORKDIR thc-ipv6/
 RUN make && make install
