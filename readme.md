@@ -168,6 +168,7 @@ continue to use the terminal:
 >drone &
 
 - From Docker host (Your Desktop OS), start Ostinato client GUI and connect to containers IP running drone.
+
 ##### **- D-ITG**
 - Single UDP flow with constant inter-departure time between packets and constant packets size:  
 start the receiver on the destination host (10.0.0.3):
