@@ -1,3 +1,7 @@
+# DockerVPC image
+# AJ NOURI: ajn.bin@gmail.com
+# cciethebeginning.wordpress.com
+#
 # Use phusion/baseimage as base image. To make your builds
 # reproducible, make sure you lock down to a specific version, not
 # to `latest`! See
