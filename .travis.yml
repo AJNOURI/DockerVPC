@@ -4,6 +4,6 @@ services:
 
 before_install:
 - docker pull ajnouri/dockervpc
-- docker run --privileged -ti -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/snd:/dev/snd -e DISPLAY=unix$DISPLAY --hostname chname --name cname ajnouri/dockervpc /bin/bash
+- docker run --privileged -d -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/snd:/dev/snd -e DISPLAY=unix$DISPLAY --hostname chname --name cname ajnouri/dockervpc /bin/bash -c "uname -a ; lsb_release -a"
 - docker ps -a
 
