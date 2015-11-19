@@ -3,7 +3,7 @@ services:
     - docker
 
 before_install:
-- docker pull carlad/sinatra
+- docker pull ajnouri/dockervpc
 - docker run --privileged -ti -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/snd:/dev/snd -e DISPLAY=unix$DISPLAY --hostname chname --name cname ajnouri/dockervpc /bin/bash
 - docker ps -a
 
