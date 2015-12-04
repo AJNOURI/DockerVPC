@@ -7,6 +7,8 @@ using the very limited VPCS or an overkill virtual machine.
 
 This includes a script to manage containers and set networking parameters using pipework.
 
+[Documentation and example are provided here (cciethebeginning.wordpress.com)](https://cciethebeginning.wordpress.com/2015/11/13/1790/)
+
 Requirements
 ------------------------------
 You will need: git, docker, pipework and lxterminal.
