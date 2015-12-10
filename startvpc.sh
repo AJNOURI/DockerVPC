@@ -120,6 +120,7 @@ function networking(){
   # - gateway: should be the IP of the next-hop simulated device in GNS3
   # local variable
   # $1 : Container ID.
+  defint='eth1'
   echo "Container networking... "
   while true; do
     read -p 'Continue? [Yy] [Nn] ' NET
@@ -130,7 +131,8 @@ function networking(){
   done
   while true; do
     read -p 'Enter Host bridge to connect the container to => ' BR
-    read -p 'Enter a new interface inside the container to connect to host bridge => ' INT
+    read -p "Enter a new interface inside the container to connect to host bridge [$defint] => " INT
+    [ -z "$INT" ] && INT=$defint
     read -p 'Enter IP address (without mask) for the container interface => ' IP
     read -p 'Enter the mask length => ' MASK
     read -p 'Enter the next-hop IP (GNS3 device) => ' NH
