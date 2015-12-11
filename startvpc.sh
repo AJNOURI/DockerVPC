@@ -19,25 +19,39 @@ function run_container(){
  esac
 }
 
+function console_attach(){
+ # local variables
+ # $1: container name
+ defans="y"
+ while true; do
+  read -p "Attach a console to the running container $1 ? (y / n) [Yy] " ATTACH
+  [ -z "$ATTACH" ] && ATTACH=$defans
+  case $ATTACH in
+    [Yy]* ) $terminal -e "docker attach $1" & >/dev/null;exit;;
+    [Nn]* ) exit;;
+  esac
+ done
+}
+
 function end_host_run(){
  # local variables
  # $1: container name
  # $2: Image tag
  if [[ $3 ]] ; then
     docker start $3
-    lxterminal -e "docker attach $1"
+    console_attach $1
     sleep 2
     networking $3
     exit
  else
      xhost local:root
-     lxterminal -e "docker run --privileged -ti \
+     docker run --privileged -tid \
          -v /tmp/.X11-unix:/tmp/.X11-unix \
          -v /dev/snd:/dev/snd \
          -e DISPLAY=unix$DISPLAY \
          --hostname $1 \
          --name $1 $2 \
-         /bin/bash"
+         /bin/bash
  fi
  }
 
@@ -79,7 +93,7 @@ function ovs_run(){
 #  OVS_ID=$(docker ps | grep $1 | awk '{ print $1; }')
   if [[ $2 ]] ; then
       docker start $2
-      lxterminal -e "docker exec -it $2 /bin/sh"
+      $terminal -e "docker exec -it $2 /bin/sh" &>/dev/null
   else
       echo "Running ovs container..."
       ovsid=$(sudo docker run -itd --name $1 --cap-add NET_ADMIN socketplane/openvswitch)
@@ -92,7 +106,7 @@ function ovs_run(){
           sleep 1
         done
       echo ""
-      lxterminal -e "docker exec -it $ovsid /bin/sh"
+      $terminal -e "docker exec -it $ovsid /bin/sh" &>/dev/null
   fi
 }
 
@@ -126,7 +140,7 @@ function networking(){
     read -p 'Continue? [Yy] [Nn] ' NET
     case $NET in
     [Yy]* ) break;;
-    [Nn]* ) exit;;
+    [Nn]* ) return 1;;
     esac
   done
   while true; do
@@ -163,7 +177,7 @@ function networking(){
       read -p 'Continue with network configuration[Cc], or quit[Qq]?  ' CONT
       case $CONT in
         [Cc]* ) break 1;;
-        [Qq]* ) exit;;
+        [Qq]* ) break 2;;
         * ) echo "Please answer [Cc]* to continue  or [Qq]* to quit ";;
       esac
     done
@@ -187,6 +201,9 @@ usage(){
 if [ "$#" -ne 2 ]; then
   usage
 fi
+
+terminal="$(ps -p $(ps -p $(ps -p $$ -o ppid=) -o ppid=) o args=)"  
+echo $terminal
 
 # Image name
 INAME=$1
@@ -239,12 +256,12 @@ then
     read -p 'Would you like to [S]top it, [D]elete it, [A]ttach a console or s[K]ip? [Ss]/[Dd]/[Aa]/[Kk]  ' RESP
     case "$RESP" in
       [Ss]* ) docker stop $RCID;exit;;
-      [Kk]* ) networking $RCID; exit;;
+      [Kk]* ) networking $RCID;console_attach $CNAME ;exit;;
       [Dd]* ) docker stop $RCID; docker rm $RCID; exit;;
       [Aa]* ) if [[ $INAME == "dockervpc" ]]; then
-              lxterminal -e "docker attach $RCID";exit;
+            console_attach $CNAME
           elif [[ $INAME == "ovs" ]]; then
-              docker exec -it $RCID /bin/sh;exit;
+            docker exec -it $RCID /bin/sh;exit;
           fi;;
       * ) echo "Please answer by [Ss], [Dd], [Aa] or [Kk] ";;
     esac
@@ -271,4 +288,5 @@ else
   sleep 2
   CID="$(docker ps | grep $CNAME | awk '{ print $1; }')"
   networking $CID
+  console_attach $CNAME
 fi
