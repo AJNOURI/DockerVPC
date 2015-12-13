@@ -11,7 +11,7 @@ This includes a script to manage containers and set networking parameters using 
 
 Requirements
 ------------------------------
-You will need: git, docker, pipework and lxterminal.
+You will need: git, docker, pipework. ~~and lxterminal.~~
 
 1.git  
 > sudo apt-get install git  
