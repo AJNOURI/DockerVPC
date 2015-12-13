@@ -23,10 +23,12 @@ You will need: git, docker, pipework and lxterminal.
 3.pipework, a simple yet powerful bash script, for advanced docker networking  
 > sudo bash -c “curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework > /usr/local/bin/pipework”  
 > sudo chmod a+x /usr/local/bin/pipework  
-
-4.lxterminal  
-> sudo apt-get install lxterminal  
-
+  
+~~4.lxterminal~~
+> lxterminal is not required anymore, the script will detect the used terminal and use it to open interactive terminal access to containers.
+  
+  
+  
 To use docker as non-root user
 > sudo usermod -aG docker {user}
 
