@@ -27,6 +27,11 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main univ
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 RUN apt-get update && apt-get install -y wget git zip
 
+# X11vnc + xvfb
+RUN apt-get install -y x11vnc xvfb
+RUN mkdir ~/.vnc
+RUN x11vnc -storepasswd gns3vpc ~/.vnc/passwd
+
 # Apache server
 RUN apt-get install -y apache2
 RUN apt-get install php5 libapache2-mod-php5 w3m -y
