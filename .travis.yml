@@ -5,5 +5,4 @@ services:
 before_install:
 - docker pull ajnouri/dockervpc
 - docker create -ti --name pc1 -p 127.0.0.1:5900:32768 ajnouri/dockervpc x11vnc -forever -usepw -create
-- docker ps -a
 
