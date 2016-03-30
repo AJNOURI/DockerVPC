@@ -27,6 +27,9 @@ RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-security main univ
 RUN echo "deb-src http://fr.archive.ubuntu.com/ubuntu/ trusty-updates main universe" >> /etc/apt/sources.list
 RUN apt-get update && apt-get install -y wget git zip
 
+# workaround for dhcp client to work
+RUN mv /sbin/dhclient /usr/sbin/dhclient
+
 # X11vnc + xvfb
 RUN apt-get install -y x11vnc xvfb
 RUN mkdir ~/.vnc
