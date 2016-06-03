@@ -31,9 +31,10 @@ RUN apt-get update && apt-get install -y wget git zip
 RUN mv /sbin/dhclient /usr/sbin/dhclient
 
 # X11vnc + xvfb
-RUN apt-get install -y x11vnc xvfb
-RUN mkdir ~/.vnc
-RUN x11vnc -storepasswd gns3vpc ~/.vnc/passwd
+# It is done by GNS3
+#RUN apt-get install -y x11vnc xvfb
+#RUN mkdir ~/.vnc
+#RUN x11vnc -storepasswd gns3vpc ~/.vnc/passwd
 
 # Apache server
 RUN apt-get install -y apache2
